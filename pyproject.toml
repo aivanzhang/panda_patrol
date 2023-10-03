@@ -14,8 +14,8 @@ requires-python = ">=3.7"
 license = {file = "LICENSE"}
 
 [project.urls]
-"Homepage" = "https://github.com/aivanzhang/data-checks"
-"Bug Tracker" = "https://github.com/aivanzhang/data-checks/issues"
+"Homepage" = "https://github.com/aivanzhang/panda-patrol"
+"Bug Tracker" = "https://github.com/aivanzhang/panda-patrol/issues"
 
 [options.packages.find]
-where = "data_checks"
+where = "panda-patrol"
