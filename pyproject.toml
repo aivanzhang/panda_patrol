@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "panda-patrol"
+version = "0.0.1"
+authors = [
+  { name="Ivan Zhang", email="ivanzhangofficial@gmail.com" },
+]
+description = "Monitor your data quality tests"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+
+[project.urls]
+"Homepage" = "https://github.com/aivanzhang/data-checks"
+"Bug Tracker" = "https://github.com/aivanzhang/data-checks/issues"
+
+[options.packages.find]
+where = "data_checks"
