@@ -9,4 +9,4 @@ result = PandaResult(
     severity=Severity.INFO,
     logs="test_logs",
 )
-print(result)
+print(result.log())

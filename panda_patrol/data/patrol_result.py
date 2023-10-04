@@ -3,8 +3,8 @@ Result from a data patrol run
 """
 import traceback
 import requests
+import os
 from enum import Enum
-from panda_patrol.conf import settings
 
 
 class Severity(Enum):
@@ -16,6 +16,9 @@ class Severity(Enum):
     WARNING = "warning"
     INFO = "info"
 
+    def __repr__(self):
+        return self.value
+
 
 class Status(Enum):
     """
@@ -25,6 +28,9 @@ class Status(Enum):
     SUCCESS = "success"
     FAILURE = "failure"
     SKIPPED = "skipped"
+
+    def __repr__(self):
+        return self.value
 
 
 class PandaResult:
@@ -84,8 +90,11 @@ class PandaResult:
             "logs": self.logs,
             "returnValue": self.returnValue,
             "patrol_code": self.patrol_code,
-            "exception": "\n".join(traceback.format_tb(self.exception.__traceback__)),
+            "exception": "\n".join(traceback.format_tb(self.exception.__traceback__))
+            if self.exception
+            else None,
         }
-        if settings.PATROL_URL:
-            requests.post(settings.PATROL_URL, data=payload)
+        patrol_url = os.environ.get("PATROL_URL")
+        if patrol_url:
+            requests.post(patrol_url, data=payload)
         return payload
