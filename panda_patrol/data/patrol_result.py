@@ -1,6 +1,7 @@
 """
 Result from a data patrol run
 """
+from datetime import datetime
 import traceback
 import requests
 import os
@@ -38,57 +39,67 @@ class PandaResult:
     Result from a data patrol run
 
     Attributes:
-    - troop: Name of the group containing many patrols
+    - patrol_group: Name of the group containing many patrols
     - patrol: Name of data rule that failed
+    - status: Status of the patrol
     - severity: Severity of the patrol
     - logs: Logs from the patrol
-    - returnValue (optional): Return value of the patrol
+    - start_time: UTC time of when the patrol started
+    - return_value (optional): Return value of the patrol
     - patrol_code (optional): Code-related to the patrol that failed
     - exception (optional): Exception that was raised
     """
 
     def __init__(
         self,
-        troop: str,
+        patrol_group: str,
         patrol: str,
         status: Status,
         severity: Severity,
         logs: str,
-        returnValue: str = None,
+        start_time: datetime = None,
+        end_time: datetime = None,
+        return_value: str = None,
         patrol_code: str = None,
         exception: Exception = None,
     ):
-        # Get current runtime, set status to failure
-        self.troop = troop
+        self.patrol_group = patrol_group
         self.patrol = patrol
         self.status = status
         self.severity = severity
         self.logs = logs
+        self.start_time = start_time
+        self.end_time = end_time
+        if self.start_time and self.end_time:
+            self.duration = (self.end_time - self.start_time).total_seconds()
 
         # Optional attributes
-        self.returnValue = returnValue
+        self.return_value = return_value
         self.patrol_code = patrol_code
         self.exception = exception
 
         super().__init__()
 
     def __str__(self):
-        return f"{self.troop}:{self.patrol} failed with severity {self.severity}"
+        return f"{self.patrol_group}:{self.patrol} failed with severity {self.severity}"
 
     def __details__(self):
-        return f"Code\n{self.patrol_code}\n\nReturn Value\n{self.returnValue}\n\nException\n{self.exception}Logs\n{self.logs}\n\n"
+        return f"Code\n{self.patrol_code}\n\nReturn Value\n{self.return_value}\n\nException\n{self.exception}Logs\n{self.logs}\n\n"
 
     def log(self):
         """
         Log the result of the patrol. If patrol url is provided, send the information externally. Otherwise, log locally.
         """
         payload = {
-            "troop": self.troop,
+            "patrol_group": self.patrol_group,
             "patrol": self.patrol,
             "status": self.status,
             "severity": self.severity,
+            "start_time": self.start_time.isoformat(),
+            "end_time": self.end_time.isoformat(),
+            "duration": self.duration,
             "logs": self.logs,
-            "returnValue": self.returnValue,
+            "return_value": self.return_value,
             "patrol_code": self.patrol_code,
             "exception": "\n".join(traceback.format_tb(self.exception.__traceback__))
             if self.exception
@@ -97,4 +108,6 @@ class PandaResult:
         patrol_url = os.environ.get("PATROL_URL")
         if patrol_url:
             requests.post(patrol_url, data=payload)
+        else:
+            print(payload)
         return payload
