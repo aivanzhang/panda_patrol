@@ -93,8 +93,8 @@ class PandaResult:
         payload = {
             "patrol_group": self.patrol_group,
             "patrol": self.patrol,
-            "status": self.status,
-            "severity": self.severity,
+            "status": self.status.value,
+            "severity": self.severity.value,
             "start_time": self.start_time.isoformat(),
             "end_time": self.end_time.isoformat(),
             "duration": self.duration,
@@ -105,9 +105,13 @@ class PandaResult:
             if self.exception
             else None,
         }
-        patrol_url = os.environ.get("PATROL_URL")
+        patrol_url = os.environ.get("PANDA_PATROL_URL")
         if patrol_url:
-            requests.post(patrol_url, data=payload)
+            response = requests.post(f"{patrol_url}/patrol/run", json=payload)
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError as e:
+                return "Request failed with error: " + str(e)
         else:
             print(payload)
         return payload
