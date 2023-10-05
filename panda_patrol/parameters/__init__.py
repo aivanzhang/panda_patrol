@@ -1,1 +1,1 @@
-from adjustable_parameter import *
+from panda_patrol.parameters.adjustable_parameter import *
