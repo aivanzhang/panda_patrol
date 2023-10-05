@@ -1,6 +1,6 @@
 from panda_patrol.data.patrol_result import Severity
 from panda_patrol.patrols import patrol_group
-from panda_patrol.parameters import adjustable_parameter
+from panda_patrol.parameters import adjustable_parameter, static_parameter
 import pandas as pd
 
 
