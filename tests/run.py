@@ -1,5 +1,6 @@
 from panda_patrol.data.patrol_result import Severity
 from panda_patrol.patrols import patrol_group
+from panda_patrol.parameters import adjustable_parameter
 import pandas as pd
 
 
@@ -8,8 +9,8 @@ def run_tests_on_dataframe(df):
         # Apply tests to the 'values' column and create new columns for results
         @patrol("is_positive", severity=Severity.INFO)
         def is_positive(patrol_id):
-            print(patrol_id)
-            df["is_positive"] = df["values"].apply(lambda num: num > 0)
+            postive_min = adjustable_parameter("is_positive", patrol_id, 0)
+            df["is_positive"] = df["values"].apply(lambda num: num > postive_min)
             print(patrol_id, df)
 
             return "POSITIVE"
