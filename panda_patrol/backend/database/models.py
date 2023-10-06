@@ -18,21 +18,10 @@ engine = create_engine(PANDA_DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
 
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    email = Column(String, index=True, unique=True)
-    patrols = relationship("Patrol", back_populates="user")
-    patrol_groups = relationship("PatrolGroup", back_populates="user")
-
-
 class PatrolGroup(Base):
     __tablename__ = "patrol_groups"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(Text, index=True)
-    user_id = Column(String, ForeignKey("users.id"))
-    user = relationship("User")
     patrols = relationship("Patrol", back_populates="group")
 
 
@@ -42,8 +31,6 @@ class Patrol(Base):
     name = Column(Text, index=True)
     group_id = Column(Integer, ForeignKey("patrol_groups.id"))
     group = relationship("PatrolGroup", back_populates="patrols")
-    user_id = Column(String, ForeignKey("users.id"))
-    user = relationship("User")
     runs = relationship("PatrolRun", back_populates="patrol")
     setting = relationship("PatrolSetting", uselist=False, back_populates="patrol")
 
