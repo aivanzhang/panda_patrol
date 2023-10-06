@@ -12,3 +12,5 @@ __pycache__
 
 .pypirc
 .vscode
+*.db
+*.env

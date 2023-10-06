@@ -1,13 +1,9 @@
 from panda_patrol.data.patrol_result import Severity
 from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter, static_parameter
-import os
 import pandas as pd
 
 # os.environ["PANDA_PATROL_URL"] = "https://panda-patrol.vercel.app"
-os.environ["PANDA_PATROL_URL"] = "http://localhost:3000"
-os.environ["PANDA_PATROL_USER"] = "be5c73f3-5d82-41fb-8dda-239bd823c37f"
-os.environ["PANDA_PATROL_ENV"] = "test"
 
 
 def run_tests_on_dataframe(df):
