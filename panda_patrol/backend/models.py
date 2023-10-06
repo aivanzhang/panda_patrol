@@ -18,3 +18,20 @@ class PatrolRunCreate(BaseModel):
 
 class SuccessResponse(BaseModel):
     success: bool
+
+
+class PatrolParameterRequest(BaseModel):
+    patrol_group: str
+    patrol: str
+    parameter_id: str
+    value: str
+    default_value: str
+    type: str
+
+
+class PatrolSettingRequest(BaseModel):
+    patrol_group: str
+    patrol: str
+    assigned_to_person: str
+    alerting: bool
+    silenced_until: datetime

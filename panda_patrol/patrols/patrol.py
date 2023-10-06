@@ -58,11 +58,6 @@ def patrol_group(
 
         end = datetime.utcnow()
         sys.stdout = sys.__stdout__
-        print(
-            os.environ.get("PANDA_PATROL_ENV"),
-            os.environ.get("PANDA_PATROL_URL"),
-            os.environ.get("PANDA_DATABASE_URL"),
-        )
         if context["store_logs"] or os.environ.get("PANDA_PATROL_ENV") == "dev":
             print(patrol_logs.getvalue().strip())
 

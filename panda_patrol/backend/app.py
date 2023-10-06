@@ -29,7 +29,7 @@ def get_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Patrol not found.")
 
     all_runs = (
-        db.query(PatrolRun.status, PatrolRun.return_value)
+        db.query(PatrolRun.status, PatrolRun.return_value, PatrolRun.severity)
         .filter_by(patrol_id=patrol_id)
         .all()
     )
@@ -47,6 +47,7 @@ def get_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db)):
         all_runs_array.append(
             {
                 "status": run.status,
+                "severity": run.severity,
                 "return_value": run.return_value,
             }
         )
@@ -161,8 +162,11 @@ def delete_patrol_group(group_id: int, db: Session = Depends(get_db)):
 @app.get("/patrol/{patrol_id}")
 def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
     patrol = db.query(Patrol).filter(Patrol.id == patrol_id).first()
+    patrol_settings = (
+        db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol_id).first()
+    )
     runs = (
-        db.query(PatrolRun.status, PatrolRun.return_value)
+        db.query(PatrolRun.status, PatrolRun.return_value, PatrolRun.severity)
         .filter(PatrolRun.patrol_id == patrol_id)
         .all()
     )
@@ -171,10 +175,15 @@ def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
         runs_array.append(
             {
                 "status": run.status,
+                "severity": run.severity,
                 "return_value": run.return_value,
             }
         )
-    return {"patrol": patrol.__dict__ if patrol else {}, "runs": runs_array}
+    return {
+        "patrol": patrol.__dict__ if patrol else {},
+        "settings": patrol_settings.__dict__ if patrol_settings else {},
+        "runs": runs_array,
+    }
 
 
 # Get all patrol parameters for a patrol group and patrol

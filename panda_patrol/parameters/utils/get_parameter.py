@@ -2,15 +2,8 @@ import requests
 
 
 def get_parameter(url, patrol_id, parameter_id, type):
-    params = {
-        "groupName": patrol_id["patrol_group"],
-        "patrolName": patrol_id["patrol"],
-        "type": type,
-    }
     response = requests.get(
-        f"{url}/patrol_parameters/{parameter_id}",
-        params=params,
-        headers={"Content-Type": "application/json"},
+        f"{url}/patrol_parameters/{patrol_id['patrol_group']}/{patrol_id['patrol']}/{type}/{parameter_id}",
     )
     try:
         response.raise_for_status()

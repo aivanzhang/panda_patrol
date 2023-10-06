@@ -3,11 +3,11 @@ import requests
 
 def update_parameter(url, patrol_id, parameter_id, type, default_value, value):
     payload = {
-        "groupName": patrol_id["patrol_group"],
-        "patrolName": patrol_id["patrol"],
-        "parameterId": parameter_id,
-        "value": value,
-        "defaultValue": default_value,
+        "patrol_group": patrol_id["patrol_group"],
+        "patrol": patrol_id["patrol"],
+        "parameter_id": parameter_id,
+        "value": f"{value}",
+        "default_value": f"{default_value}",
         "type": type,
     }
     response = requests.post(
@@ -19,3 +19,4 @@ def update_parameter(url, patrol_id, parameter_id, type, default_value, value):
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         print("Failed to store parameter value in server")
+    return

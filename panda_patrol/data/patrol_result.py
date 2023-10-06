@@ -98,12 +98,12 @@ class PandaResult:
             "start_time": self.start_time.isoformat(),
             "end_time": self.end_time.isoformat(),
             "duration": self.duration,
-            "logs": self.logs,
-            "return_value": self.return_value,
-            "patrol_code": self.patrol_code,
+            "logs": self.logs or "",
+            "return_value": self.return_value or "",
+            "patrol_code": self.patrol_code or "",
             "exception": "\n".join(traceback.format_tb(self.exception.__traceback__))
             if self.exception
-            else None,
+            else "",
         }
         patrol_url = os.environ.get("PANDA_PATROL_URL")
         if patrol_url:
