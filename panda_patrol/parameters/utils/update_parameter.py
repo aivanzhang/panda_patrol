@@ -1,7 +1,7 @@
 import requests
 
 
-def update_parameter(url, user, patrol_id, parameter_id, type, default_value, value):
+def update_parameter(url, patrol_id, parameter_id, type, default_value, value):
     payload = {
         "groupName": patrol_id["patrol_group"],
         "patrolName": patrol_id["patrol"],
@@ -13,7 +13,6 @@ def update_parameter(url, user, patrol_id, parameter_id, type, default_value, va
     response = requests.post(
         f"{url}/patrol_parameters",
         json=payload,
-        headers={"user-id": user},
     )
 
     try:

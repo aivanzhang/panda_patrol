@@ -2,13 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 
 
-class UserCreate(BaseModel):
-    name: str
-    email: str
-
-
 class PatrolRunCreate(BaseModel):
-    user_id: int
     patrol_group: str
     patrol: str
     status: str

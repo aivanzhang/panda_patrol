@@ -1,7 +1,7 @@
 import requests
 
 
-def get_parameter(url, user, patrol_id, parameter_id, type):
+def get_parameter(url, patrol_id, parameter_id, type):
     params = {
         "groupName": patrol_id["patrol_group"],
         "patrolName": patrol_id["patrol"],
@@ -10,7 +10,7 @@ def get_parameter(url, user, patrol_id, parameter_id, type):
     response = requests.get(
         f"{url}/patrol_parameters/{parameter_id}",
         params=params,
-        headers={"user-id": user, "Content-Type": "application/json"},
+        headers={"Content-Type": "application/json"},
     )
     try:
         response.raise_for_status()

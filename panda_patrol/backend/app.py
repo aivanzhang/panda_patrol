@@ -15,20 +15,6 @@ def get_db():
         db.close()
 
 
-# Create a new user or get an existing user
-@app.post("/user/", response_model=UserCreate)
-def create_or_get_user(user_data: UserCreate, db: Session = Depends(get_db)):
-    user = db.query(User).filter_by(email=user_data.email).first()
-
-    if not user:
-        new_user = User(email=user_data.email, name=user_data.name)
-        db.add(new_user)
-        db.commit()
-        return new_user
-
-    return user
-
-
 # Create a new patrol run
 @app.post("/patrol/run", response_model=SuccessResponse)
 def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)):
@@ -101,49 +87,93 @@ def resolve_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db
     return {"success": True}
 
 
-# @app.get("/summary/{user_id}")
-# def get_summary(user_id: str, db: Session = Depends(get_db)):
-#     # Subquery for latest runs
-#     latest_runs = (
-#         db.query(PatrolRun.patrol_id, func.max(PatrolRun.id).label("run_id"))
-#         .group_by(PatrolRun.patrol_id)
-#         .subquery()
-#     )
+@app.get("/patrol_groups")
+def get_patrol_groups(db: Session = Depends(get_db)):
+    patrol_groups = db.query(PatrolGroup).all()
+    return patrol_groups
 
-#     # Main query
-#     summary = (
-#         db.query(
-#             func.count().label("total"),
-#             func.sum(case((PatrolRun.status == "success", 1), else_=0)).label(
-#                 "success"
-#             ),
-#             func.sum(case((PatrolRun.status == "failure", 1), else_=0)).label(
-#                 "failure"
-#             ),
-#             func.sum(case((PatrolRun.status == "skipped", 1), else_=0)).label(
-#                 "skipped"
-#             ),
-#             func.sum(case((PatrolRun.severity == "critical", 1), else_=0)).label(
-#                 "critical"
-#             ),
-#             func.sum(case((PatrolRun.severity == "warning", 1), else_=0)).label(
-#                 "warning"
-#             ),
-#             func.sum(case((PatrolRun.severity == "info", 1), else_=0)).label("info"),
+
+@app.delete("/patrol_group/{group_id}")
+def delete_patrol_group(group_id: int, db: Session = Depends(get_db)):
+    associated_patrols = db.query(Patrol).filter(Patrol.group_id == group_id).all()
+
+    for patrol in associated_patrols:
+        patrol_setting = (
+            db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol.id).first()
+        )
+        if patrol_setting:
+            db.query(PatrolParameter).filter(
+                PatrolParameter.setting_id == patrol_setting.id
+            ).delete()
+
+        # Delete the patrol's setting
+        db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol.id).delete()
+
+        # Delete associated runs for the patrol
+        db.query(PatrolRun).filter(PatrolRun.patrol_id == patrol.id).delete()
+
+        # Delete the patrol itself
+        db.query(Patrol).filter(Patrol.id == patrol.id).delete()
+
+    db.query(PatrolGroup).filter(PatrolGroup.id == group_id).delete()
+    db.commit()
+    return {"success": True}
+
+
+@app.get("/patrol/{patrol_id}")
+def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
+    patrol = db.query(Patrol).filter(Patrol.id == patrol_id).first()
+    runs = (
+        db.query(PatrolRun.status, PatrolRun.return_value)
+        .filter(PatrolRun.patrol_id == patrol_id)
+        .all()
+    )
+    runs_array = []
+    for run in runs:
+        runs_array.append({"status": run.status, "return_value": run.return_value})
+    return {"patrol": patrol.__dict__, "runs": runs_array}
+
+
+@app.get("/patrol_parameters/")
+def get_patrol_parameters(
+    group_name: str,
+    patrol_name: str,
+    db: Session = Depends(get_db),
+):
+    parameters = (
+        db.query(PatrolParameter)
+        .join(PatrolSetting, PatrolParameter.setting_id == PatrolSetting.id)
+        .join(Patrol, PatrolSetting.patrol_id == Patrol.id)
+        .join(PatrolGroup, Patrol.group_id == PatrolGroup.id)
+        .filter(PatrolGroup.name == group_name, Patrol.name == patrol_name)
+        .all()
+    )
+    return parameters
+
+
+# @app.get("/patrol_parameters/{param_id}")
+# def get_specific_patrol_parameter(
+#     param_id: int,
+#     user_id: int = Header(...),
+#     group_name: str = Query(...),
+#     patrol_name: str = Query(...),
+#     type: str = Query(...),
+#     db: Session = Depends(get_db),
+# ):
+#     parameter = (
+#         db.query(PatrolParameter)
+#         .join(PatrolSetting, PatrolParameter.setting_id == PatrolSetting.id)
+#         .join(Patrol, PatrolSetting.patrol_id == Patrol.id)
+#         .join(PatrolGroup, Patrol.group_id == PatrolGroup.id)
+#         .filter(
+#             PatrolGroup.name == group_name,
+#             Patrol.name == patrol_name,
+#             Patrol.user_id == user_id,
+#             PatrolParameter.parameter_id == param_id,
+#             PatrolParameter.type == type,
 #         )
-#         .join(Patrol, Patrol.id == PatrolRun.patrol_id)
-#         .filter(and_(Patrol.user_id == user_id, PatrolRun.id.in_(latest_runs)))
 #         .first()
 #     )
-
-#     print(latest_runs)
-
-# return {
-#     "total": summary.total,
-#     "success": summary.success,
-#     "failure": summary.failure,
-#     "skipped": summary.skipped,
-#     "critical": summary.critical,
-#     "warning": summary.warning,
-#     "info": summary.info,
-# }
+#     if not parameter:
+#         raise HTTPException(status_code=404, detail="Parameter not found.")
+#     return {"value": parameter}
