@@ -1,6 +1,5 @@
 import argparse
 import uvicorn
-from panda_patrol.backend.app import app
 
 
 def main():
@@ -22,4 +21,6 @@ def main():
 
     args = parser.parse_args()
 
-    uvicorn.run(app, host=args.host, port=args.port)
+    uvicorn.run(
+        "panda_patrol.backend.app:app", host=args.host, port=args.port, reload=True
+    )

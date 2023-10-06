@@ -20,8 +20,9 @@ SessionLocal = sessionmaker(bind=engine)
 
 class User(Base):
     __tablename__ = "users"
-    id = Column(String, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
+    email = Column(String, index=True, unique=True)
 
 
 class PatrolGroup(Base):
@@ -29,6 +30,7 @@ class PatrolGroup(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(Text, index=True)
     user_id = Column(String, ForeignKey("users.id"))
+    user = relationship("User")
 
 
 class Patrol(Base):
@@ -36,13 +38,16 @@ class Patrol(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(Text, index=True)
     group_id = Column(Integer, ForeignKey("patrol_groups.id"))
+    group = relationship("PatrolGroup", back_populates="patrols")
     user_id = Column(String, ForeignKey("users.id"))
+    user = relationship("User")
 
 
 class PatrolRun(Base):
     __tablename__ = "patrol_runs"
     id = Column(Integer, primary_key=True, index=True)
     patrol_id = Column(Integer, ForeignKey("patrols.id"))
+    patrol = relationship("Patrol", back_populates="runs")
     status = Column(String, index=True)
     severity = Column(String, index=True)
     return_value = Column(Text)
@@ -53,14 +58,6 @@ class PatrolRun(Base):
     exception = Column(Text)
 
 
-class Setting(Base):
-    __tablename__ = "settings"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(String, ForeignKey("users.id"))
-    emails = Column(Text)  # Comma-separated emails
-    other_settings = Column(Text)  # JSON string
-
-
 class PatrolSetting(Base):
     __tablename__ = "patrol_settings"
     id = Column(Integer, primary_key=True, index=True)
@@ -68,17 +65,15 @@ class PatrolSetting(Base):
     alerting = Column(Boolean, default=True)
     silenced_until = Column(TIMESTAMP)
     patrol_id = Column(Integer, ForeignKey("patrols.id"), unique=True)
+    patrol = relationship("Patrol", back_populates="setting")
 
 
 class PatrolParameter(Base):
     __tablename__ = "patrol_parameters"
     id = Column(Integer, primary_key=True, index=True)
     parameter_id = Column(Text, index=True)
-    setting_id = Column(Integer, ForeignKey("patrol_settings.id"))
     value = Column(Text)
     type = Column(String, index=True)
     default_value = Column(Text)
-
-
-if __name__ == "__main__":
-    Base.metadata.create_all(bind=engine)
+    setting_id = Column(Integer, ForeignKey("patrol_settings.id"))
+    setting = relationship("PatrolSetting", back_populates="parameters")
