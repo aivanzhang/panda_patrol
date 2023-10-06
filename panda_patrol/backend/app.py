@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
 from panda_patrol.backend.database.models import *
 from panda_patrol.backend.models import *
 
@@ -15,24 +16,58 @@ def get_db():
         db.close()
 
 
+# Get patrol details and all its runs
+@app.get("/patrol/{patrol_id}/run/{run_id}")
+def get_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db)):
+    patrol_details = (
+        db.query(Patrol, PatrolSetting)
+        .outerjoin(PatrolSetting, Patrol.id == PatrolSetting.patrol_id)
+        .filter(Patrol.id == patrol_id)
+        .first()
+    )
+    if not patrol_details:
+        raise HTTPException(status_code=404, detail="Patrol not found.")
+
+    all_runs = (
+        db.query(PatrolRun.status, PatrolRun.return_value)
+        .filter_by(patrol_id=patrol_id)
+        .all()
+    )
+    current_run_details = (
+        db.query(PatrolRun).filter_by(id=run_id, patrol_id=patrol_id).first()
+    )
+
+    if not current_run_details:
+        raise HTTPException(
+            status_code=404, detail="Run not found for the given patrol."
+        )
+
+    all_runs_array = []
+    for run in all_runs:
+        all_runs_array.append(
+            {
+                "status": run.status,
+                "return_value": run.return_value,
+            }
+        )
+
+    return {
+        "patrol": {
+            "details": patrol_details[0].__dict__,
+            "settings": patrol_details[1].__dict__,
+        },
+        "allRuns": all_runs_array,
+        "currentRunDetails": current_run_details.__dict__,
+    }
+
+
 # Create a new patrol run
 @app.post("/patrol/run", response_model=SuccessResponse)
 def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)):
-    # Check if user exists
-    user = db.query(User).filter_by(id=patrol_run.user_id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-
     # Create or get patrol_group
-    patrol_group = (
-        db.query(PatrolGroup)
-        .filter_by(name=patrol_run.patrol_group, user_id=patrol_run.user_id)
-        .first()
-    )
+    patrol_group = db.query(PatrolGroup).filter_by(name=patrol_run.patrol_group).first()
     if not patrol_group:
-        patrol_group = PatrolGroup(
-            name=patrol_run.patrol_group, user_id=patrol_run.user_id
-        )
+        patrol_group = PatrolGroup(name=patrol_run.patrol_group)
         db.add(patrol_group)
         db.commit()
 
@@ -87,12 +122,14 @@ def resolve_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db
     return {"success": True}
 
 
+# Get all patrol groups
 @app.get("/patrol_groups")
 def get_patrol_groups(db: Session = Depends(get_db)):
     patrol_groups = db.query(PatrolGroup).all()
     return patrol_groups
 
 
+# Delete a patrol group
 @app.delete("/patrol_group/{group_id}")
 def delete_patrol_group(group_id: int, db: Session = Depends(get_db)):
     associated_patrols = db.query(Patrol).filter(Patrol.group_id == group_id).all()
@@ -120,6 +157,7 @@ def delete_patrol_group(group_id: int, db: Session = Depends(get_db)):
     return {"success": True}
 
 
+# Get a patrol and all its runs
 @app.get("/patrol/{patrol_id}")
 def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
     patrol = db.query(Patrol).filter(Patrol.id == patrol_id).first()
@@ -130,14 +168,20 @@ def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
     )
     runs_array = []
     for run in runs:
-        runs_array.append({"status": run.status, "return_value": run.return_value})
-    return {"patrol": patrol.__dict__, "runs": runs_array}
+        runs_array.append(
+            {
+                "status": run.status,
+                "return_value": run.return_value,
+            }
+        )
+    return {"patrol": patrol.__dict__ if patrol else {}, "runs": runs_array}
 
 
-@app.get("/patrol_parameters/")
+# Get all patrol parameters for a patrol group and patrol
+@app.get("/patrol_parameters/{patrol_group}/{patrol}")
 def get_patrol_parameters(
-    group_name: str,
-    patrol_name: str,
+    patrol_group: str,
+    patrol: str,
     db: Session = Depends(get_db),
 ):
     parameters = (
@@ -145,35 +189,184 @@ def get_patrol_parameters(
         .join(PatrolSetting, PatrolParameter.setting_id == PatrolSetting.id)
         .join(Patrol, PatrolSetting.patrol_id == Patrol.id)
         .join(PatrolGroup, Patrol.group_id == PatrolGroup.id)
-        .filter(PatrolGroup.name == group_name, Patrol.name == patrol_name)
+        .filter(PatrolGroup.name == patrol_group, Patrol.name == patrol)
         .all()
     )
     return parameters
 
 
-# @app.get("/patrol_parameters/{param_id}")
-# def get_specific_patrol_parameter(
-#     param_id: int,
-#     user_id: int = Header(...),
-#     group_name: str = Query(...),
-#     patrol_name: str = Query(...),
-#     type: str = Query(...),
-#     db: Session = Depends(get_db),
-# ):
-#     parameter = (
-#         db.query(PatrolParameter)
-#         .join(PatrolSetting, PatrolParameter.setting_id == PatrolSetting.id)
-#         .join(Patrol, PatrolSetting.patrol_id == Patrol.id)
-#         .join(PatrolGroup, Patrol.group_id == PatrolGroup.id)
-#         .filter(
-#             PatrolGroup.name == group_name,
-#             Patrol.name == patrol_name,
-#             Patrol.user_id == user_id,
-#             PatrolParameter.parameter_id == param_id,
-#             PatrolParameter.type == type,
-#         )
-#         .first()
-#     )
-#     if not parameter:
-#         raise HTTPException(status_code=404, detail="Parameter not found.")
-#     return {"value": parameter}
+# Get all patrol parameters for a patrol group and patrol
+@app.get("/patrol_parameters/{patrol_group}/{patrol}/{type}/{parameter_id}")
+def get_patrol_parameters(
+    patrol_group: str,
+    patrol: str,
+    type: str,
+    parameter_id: str,
+    db: Session = Depends(get_db),
+):
+    parameter = (
+        db.query(PatrolParameter)
+        .join(PatrolSetting, PatrolParameter.setting_id == PatrolSetting.id)
+        .join(Patrol, PatrolSetting.patrol_id == Patrol.id)
+        .join(PatrolGroup, Patrol.group_id == PatrolGroup.id)
+        .filter(
+            PatrolGroup.name == patrol_group,
+            Patrol.name == patrol,
+            PatrolParameter.type == type,
+            PatrolParameter.parameter_id == parameter_id,
+        )
+        .first()
+    )
+    return parameter.__dict__ if parameter else {}
+
+
+# Update patrol parameters for a patrol group and patrol
+@app.post("/patrol_parameters")
+def update_patrol_parameters(
+    patrol_params: PatrolParameterRequest, db: Session = Depends(get_db)
+):
+    # Check if patrol group exists
+    patrol_group = (
+        db.query(PatrolGroup).filter_by(name=patrol_params.patrol_group).first()
+    )
+    if not patrol_group:
+        patrol_group = PatrolGroup(name=patrol_params.patrol_group)
+        db.add(patrol_group)
+        db.commit()
+
+    # Check if patrol exists
+    patrol = (
+        db.query(Patrol)
+        .filter_by(name=patrol_params.patrol, group_id=patrol_group.id)
+        .first()
+    )
+    if not patrol:
+        patrol = Patrol(name=patrol_params.patrol, group_id=patrol_group.id)
+        db.add(patrol)
+        db.commit()
+
+    # Check if patrol settings exist
+    patrol_setting = db.query(PatrolSetting).filter_by(patrol_id=patrol.id).first()
+    if not patrol_setting:
+        patrol_setting = PatrolSetting(patrol_id=patrol.id)
+        db.add(patrol_setting)
+        db.commit()
+
+    # Check if the parameter exists
+    existing_parameter = (
+        db.query(PatrolParameter)
+        .filter_by(
+            parameter_id=patrol_params.parameter_id,
+            setting_id=patrol_setting.id,
+            type=patrol_params.type,
+        )
+        .first()
+    )
+    if existing_parameter:
+        # Update existing parameter
+        existing_parameter.value = patrol_params.value
+        existing_parameter.default_value = patrol_params.default_value
+    else:
+        # Create new parameter
+        new_parameter = PatrolParameter(
+            parameter_id=patrol_params.parameter_id,
+            setting_id=patrol_setting.id,
+            value=patrol_params.value,
+            type=patrol_params.type,
+            default_value=patrol_params.default_value,
+        )
+        db.add(new_parameter)
+
+    db.commit()
+    return {"success": True}
+
+
+# Get patrol settings for a patrol group and patrol
+@app.get("/patrol_settings/{patrol_group}/{patrol}")
+def get_patrol_settings(
+    patrol_group: str,
+    patrol: str,
+    db: Session = Depends(get_db),
+):
+    patrol_settings = (
+        db.query(PatrolSetting)
+        .join(Patrol, PatrolSetting.patrol_id == Patrol.id)
+        .join(PatrolGroup, Patrol.group_id == PatrolGroup.id)
+        .filter(PatrolGroup.name == patrol_group, Patrol.name == patrol)
+        .first()
+    )
+    return patrol_settings.__dict__ if patrol_settings else {}
+
+
+# Update patrol settings for a patrol group and patrol
+@app.post("/patrol_settings")
+def update_patrol_settings(
+    request: PatrolSettingRequest, db: Session = Depends(get_db)
+):
+    patrol_group = db.query(PatrolGroup).filter_by(name=request.patrol_group).first()
+    if not patrol_group:
+        patrol_group = PatrolGroup(name=request.patrol_group)
+        db.add(patrol_group)
+        db.commit()
+
+    patrol = (
+        db.query(Patrol)
+        .filter_by(name=request.patrol, group_id=patrol_group.id)
+        .first()
+    )
+    if not patrol:
+        patrol = Patrol(name=request.patrol, group_id=patrol_group.id)
+        db.add(patrol)
+        db.commit()
+
+    patrol_setting = db.query(PatrolSetting).filter_by(patrol_id=patrol.id).first()
+    if patrol_setting:
+        patrol_setting.assigned_to_person = request.assigned_to_person
+        patrol_setting.alerting = request.alerting
+        patrol_setting.silenced_until = request.silenced_until
+    else:
+        patrol_setting = PatrolSetting(
+            assigned_to_person=request.assigned_to_person,
+            alerting=request.alerting,
+            silenced_until=request.silenced_until,
+            patrol_id=patrol.id,
+        )
+        db.add(patrol_setting)
+
+    db.commit()
+    return {"success": True}
+
+
+# Get summary of all the latest patrols runs
+@app.get("/summary")
+def summary(db: Session = Depends(get_db)):
+    result = db.execute(
+        text(
+            """
+        SELECT 
+            COUNT(*) as total,
+            SUM(CASE WHEN status = 'success' THEN 1 ELSE 0 END) as success,
+            SUM(CASE WHEN status = 'failure' THEN 1 ELSE 0 END) as failure,
+            SUM(CASE WHEN status = 'skipped' THEN 1 ELSE 0 END) as skipped,
+            SUM(CASE WHEN severity = 'critical' THEN 1 ELSE 0 END) as critical,
+            SUM(CASE WHEN severity = 'warning' THEN 1 ELSE 0 END) as warning,
+            SUM(CASE WHEN severity = 'info' THEN 1 ELSE 0 END) as info
+        FROM patrol_runs
+        JOIN patrols ON patrols.id = patrol_runs.patrol_id
+        WHERE patrol_runs.id IN (
+            SELECT MAX(id) 
+            FROM patrol_runs 
+            GROUP BY patrol_id
+        )
+    """
+        )
+    ).fetchone()
+    return {
+        "total": result[0],
+        "success": result[1],
+        "failure": result[2],
+        "skipped": result[3],
+        "critical": result[4],
+        "warning": result[5],
+        "info": result[6],
+    }
