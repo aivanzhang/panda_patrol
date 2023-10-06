@@ -58,7 +58,7 @@ def patrol_group(
 
         end = datetime.utcnow()
         sys.stdout = sys.__stdout__
-        if not context["store_logs"] or os.environ.get("PANDA_PATROL_ENV") == "test":
+        if context["store_logs"] or os.environ.get("PANDA_PATROL_ENV") == "test":
             print(patrol_logs.getvalue().strip())
 
         PandaResult(
