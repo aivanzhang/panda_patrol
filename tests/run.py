@@ -1,7 +1,13 @@
 from panda_patrol.data.patrol_result import Severity
 from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter, static_parameter
+import os
 import pandas as pd
+
+# os.environ["PANDA_PATROL_URL"] = "https://panda-patrol.vercel.app"
+os.environ["PANDA_PATROL_URL"] = "http://localhost:3000"
+os.environ["PANDA_PATROL_USER"] = "be5c73f3-5d82-41fb-8dda-239bd823c37f"
+os.environ["PANDA_PATROL_ENV"] = "test"
 
 
 def run_tests_on_dataframe(df):
@@ -10,6 +16,7 @@ def run_tests_on_dataframe(df):
         @patrol("is_positive", severity=Severity.INFO)
         def is_positive(patrol_id):
             postive_min = adjustable_parameter("is_positive", patrol_id, 0)
+            static_postive_min = static_parameter("is_positive", patrol_id, 4)
             df["is_positive"] = df["values"].apply(lambda num: num > postive_min)
             print(patrol_id, df)
 

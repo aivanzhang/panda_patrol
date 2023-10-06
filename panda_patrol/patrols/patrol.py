@@ -1,5 +1,6 @@
 import sys
 import inspect
+import os
 from typing import TypedDict, Callable
 from datetime import datetime
 from io import StringIO
@@ -30,29 +31,34 @@ def patrol_group(
                 severity=severity,
                 store_logs=store_logs,
                 func=func,
+                patrol_dict={
+                    "patrol_group": group_name,
+                    "patrol": name,
+                },
             )
 
         return patrol_decorator
 
     yield patrol
 
-    for id, context in patrols.items():
+    for context in patrols.values():
         start = datetime.utcnow()
         patrol_logs = StringIO()
         status: Status = Status.SUCCESS
         exception: Exception = None
+        return_value: any = None
         if context["store_logs"]:
             sys.stdout = patrol_logs
 
         try:
-            return_value = context["func"](id)
+            return_value = context["func"](context["patrol_dict"])
         except Exception as e:
             status = Status.FAILURE
             exception = e
 
         end = datetime.utcnow()
         sys.stdout = sys.__stdout__
-        if context["store_logs"]:
+        if not context["store_logs"] or os.environ.get("PANDA_PATROL_ENV") == "test":
             print(patrol_logs.getvalue().strip())
 
         PandaResult(
