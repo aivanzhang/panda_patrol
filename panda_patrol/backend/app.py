@@ -15,27 +15,21 @@ def get_db():
         db.close()
 
 
-# Create a new user
-@app.post("/users/", response_model=UserCreate)
-def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.email == user.email).first()
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+# Create a new user or get an existing user
+@app.post("/user/", response_model=UserCreate)
+def create_or_get_user(user_data: UserCreate, db: Session = Depends(get_db)):
+    user = db.query(User).filter_by(email=user_data.email).first()
 
-    new_user = User(name=user.name, email=user.email)
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    if not user:
+        new_user = User(email=user_data.email, name=user_data.name)
+        db.add(new_user)
+        db.commit()
+        return new_user
 
-    return new_user
-
-
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
-
-app = FastAPI()
+    return user
 
 
+# Create a new patrol run
 @app.post("/patrol/run", response_model=SuccessResponse)
 def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)):
     # Check if user exists
@@ -89,7 +83,10 @@ def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)
     db.add(patrol_run_instance)
     db.commit()
 
+    return {"success": True}
 
+
+# Resolve a patrol run
 @app.post("/patrol/{patrol_id}/run/{run_id}/resolve", response_model=SuccessResponse)
 def resolve_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db)):
     patrol_run = db.query(PatrolRun).filter_by(id=run_id, patrol_id=patrol_id).first()

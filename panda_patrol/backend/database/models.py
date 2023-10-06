@@ -23,6 +23,8 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     email = Column(String, index=True, unique=True)
+    patrols = relationship("Patrol", back_populates="user")
+    patrol_groups = relationship("PatrolGroup", back_populates="user")
 
 
 class PatrolGroup(Base):
@@ -31,6 +33,7 @@ class PatrolGroup(Base):
     name = Column(Text, index=True)
     user_id = Column(String, ForeignKey("users.id"))
     user = relationship("User")
+    patrols = relationship("Patrol", back_populates="group")
 
 
 class Patrol(Base):
@@ -41,6 +44,8 @@ class Patrol(Base):
     group = relationship("PatrolGroup", back_populates="patrols")
     user_id = Column(String, ForeignKey("users.id"))
     user = relationship("User")
+    runs = relationship("PatrolRun", back_populates="patrol")
+    setting = relationship("PatrolSetting", uselist=False, back_populates="patrol")
 
 
 class PatrolRun(Base):
@@ -66,6 +71,7 @@ class PatrolSetting(Base):
     silenced_until = Column(TIMESTAMP)
     patrol_id = Column(Integer, ForeignKey("patrols.id"), unique=True)
     patrol = relationship("Patrol", back_populates="setting")
+    parameters = relationship("PatrolParameter", back_populates="setting")
 
 
 class PatrolParameter(Base):

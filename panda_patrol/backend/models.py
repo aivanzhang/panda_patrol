@@ -13,11 +13,12 @@ class PatrolRunCreate(BaseModel):
     patrol: str
     status: str
     severity: str
+    start_time: datetime
+    end_time: datetime
     patrol_code: str
     logs: str
     return_value: str
-    start_time: datetime
-    end_time: datetime
+    duration: float
     exception: str
 
 

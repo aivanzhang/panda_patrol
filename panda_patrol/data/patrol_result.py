@@ -91,6 +91,7 @@ class PandaResult:
         Log the result of the patrol. If patrol url is provided, send the information externally. Otherwise, log locally.
         """
         payload = {
+            "user_id": os.environ.get("PANDA_USER_ID"),
             "patrol_group": self.patrol_group,
             "patrol": self.patrol,
             "status": self.status.value,
