@@ -1,5 +1,6 @@
 import argparse
 import uvicorn
+import json
 
 
 def main():
@@ -18,8 +19,11 @@ def main():
         default=8000,
         help="The port to run the server on.",
     )
-
     args = parser.parse_args()
+
+    url = "http://{}:{}".format(args.host, args.port)
+    with open("panda_patrol/backend/static/config.json", "w") as f:
+        json.dump({"PANDA_PATROL_URL": url}, f)
 
     uvicorn.run(
         "panda_patrol.backend.app:app", host=args.host, port=args.port, reload=True

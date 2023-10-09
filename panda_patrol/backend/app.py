@@ -1,10 +1,19 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
+import json
 from panda_patrol.backend.database.models import *
 from panda_patrol.backend.models import *
 
 app = FastAPI()
+
+app.mount(
+    "/static",
+    StaticFiles(directory="panda_patrol/backend/static"),
+    name="static",
+)
 
 
 # Dependency to get the database session
@@ -379,3 +388,13 @@ def summary(db: Session = Depends(get_db)):
         "warning": result[5],
         "info": result[6],
     }
+
+
+@app.get("/config.json")
+def config():
+    return JSONResponse(json.load(open("panda_patrol/backend/static/config.json")))
+
+
+@app.get("/{full_path:path}")
+def serve_static(full_path: str):
+    return HTMLResponse(open("panda_patrol/backend/static/index.html").read())
