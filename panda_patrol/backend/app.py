@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 import json
@@ -8,6 +9,17 @@ from panda_patrol.backend.database.models import *
 from panda_patrol.backend.models import *
 
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 app.mount(
     "/static",
@@ -23,6 +35,27 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/users")
+def get_users(db: Session = Depends(get_db)):
+    users = db.query(Person).all()
+    return users
+
+
+@app.post("/users/{action_type}")
+def update_users(
+    action_type: str, request: PersonRequest, db: Session = Depends(get_db)
+):
+    if action_type == "add":
+        new_user = Person(name=request.name, email=request.email)
+        db.add(new_user)
+    elif action_type == "delete":
+        user = db.query(Person).filter_by(id=request.id).first()
+        if user:
+            db.delete(user)
+    db.commit()
+    return {"success": True}
 
 
 # Get patrol details and all its runs
