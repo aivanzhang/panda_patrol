@@ -1,5 +1,11 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+from typing import Optional
 from datetime import datetime
+
+
+class PersonRequest(BaseModel):
+    name: str
+    email: str
 
 
 class PatrolRunCreate(BaseModel):
@@ -25,13 +31,12 @@ class PatrolParameterRequest(BaseModel):
     patrol: str
     parameter_id: str
     value: str
-    default_value: str
     type: str
 
 
 class PatrolSettingRequest(BaseModel):
     patrol_group: str
     patrol: str
-    assigned_to_person: str
+    assigned_to_person: Optional[int] = Field(None)
     alerting: bool
-    silenced_until: datetime
+    silenced_until: Optional[datetime] = Field(None)
