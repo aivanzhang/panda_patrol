@@ -1,14 +1,14 @@
 import requests
 
 
-def update_parameter(url, patrol_id, parameter_id, type, default_value, value):
+def update_parameter(url, patrol_id, parameter_id, type, value):
     payload = {
         "patrol_group": patrol_id["patrol_group"],
         "patrol": patrol_id["patrol"],
         "parameter_id": parameter_id,
         "value": f"{value}",
-        "default_value": f"{default_value}",
         "type": type,
+        "is_active": True,
     }
     response = requests.post(
         f"{url}/patrol_parameters",

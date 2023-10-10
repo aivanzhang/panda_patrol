@@ -32,6 +32,7 @@ class PatrolParameterRequest(BaseModel):
     parameter_id: str
     value: str
     type: str
+    is_active: bool = True
 
 
 class PatrolSettingRequest(BaseModel):
@@ -40,3 +41,8 @@ class PatrolSettingRequest(BaseModel):
     assigned_to_person: Optional[int] = Field(None)
     alerting: bool
     silenced_until: Optional[datetime] = Field(None)
+
+
+class PatrolResetParametersRequest(BaseModel):
+    patrol_group: str
+    patrol: str

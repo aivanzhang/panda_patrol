@@ -11,8 +11,8 @@ def run_tests_on_dataframe(df):
         # Apply tests to the 'values' column and create new columns for results
         @patrol("is_positive", severity=Severity.INFO)
         def is_positive(patrol_id):
-            postive_min = adjustable_parameter("is_positive", patrol_id, 0)
-            static_postive_min = static_parameter("is_positive", patrol_id, 4)
+            postive_min = int(adjustable_parameter("is_positive", patrol_id, 0))
+            static_postive_min = int(static_parameter("is_positive", patrol_id, 4))
             df["is_positive"] = df["values"].apply(lambda num: num > postive_min)
             # print(patrol_id, df)
 

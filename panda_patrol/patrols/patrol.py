@@ -6,6 +6,7 @@ from datetime import datetime
 from io import StringIO
 from contextlib import contextmanager
 from panda_patrol.data.patrol_result import PandaResult, Status, Severity
+from panda_patrol.parameters.utils.reset_parameters import reset_parameters
 
 
 class PatrolContext(TypedDict):
@@ -47,6 +48,8 @@ def patrol_group(
         status: Status = Status.SUCCESS
         exception: Exception = None
         return_value: any = None
+        reset_parameters(group_name, context["patrol_dict"]["patrol"])
+
         if context["store_logs"]:
             sys.stdout = patrol_logs
 

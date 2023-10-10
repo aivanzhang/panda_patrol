@@ -3,7 +3,7 @@ from panda_patrol.parameters.utils.get_parameter import get_parameter
 import os
 
 
-def adjustable_parameter(parameter_id, patrol_id, init_value):
+def adjustable_parameter(parameter_id, patrol_id, value):
     patrol_url = os.environ.get("PANDA_PATROL_URL")
     if patrol_url:
         param_value = get_parameter(patrol_url, patrol_id, parameter_id, "adjustable")
@@ -13,9 +13,15 @@ def adjustable_parameter(parameter_id, patrol_id, init_value):
                 patrol_id,
                 parameter_id,
                 "adjustable",
-                init_value,
-                init_value,
+                value,
             )
         else:
+            update_parameter(
+                patrol_url,
+                patrol_id,
+                parameter_id,
+                "adjustable",
+                param_value,
+            )
             return param_value
-    return init_value
+    return value
