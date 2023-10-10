@@ -18,10 +18,17 @@ engine = create_engine(PANDA_DATABASE_URL)
 SessionLocal = sessionmaker(bind=engine)
 
 
+class Person(Base):
+    __tablename__ = "people"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(Text, index=True)
+    email = Column(Text, index=True, unique=True)
+
+
 class PatrolGroup(Base):
     __tablename__ = "patrol_groups"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(Text, index=True)
+    name = Column(Text, index=True, unique=True)
     patrols = relationship("Patrol", back_populates="group")
 
 
@@ -53,7 +60,7 @@ class PatrolRun(Base):
 class PatrolSetting(Base):
     __tablename__ = "patrol_settings"
     id = Column(Integer, primary_key=True, index=True)
-    assigned_to_person = Column(Text)
+    assigned_to_person = Column(Integer, ForeignKey("people.id"))
     alerting = Column(Boolean, default=True)
     silenced_until = Column(TIMESTAMP)
     patrol_id = Column(Integer, ForeignKey("patrols.id"), unique=True)
@@ -67,6 +74,6 @@ class PatrolParameter(Base):
     parameter_id = Column(Text, index=True)
     value = Column(Text)
     type = Column(String, index=True)
-    default_value = Column(Text)
+    is_active = Column(Boolean, default=True)
     setting_id = Column(Integer, ForeignKey("patrol_settings.id"))
     setting = relationship("PatrolSetting", back_populates="parameters")
