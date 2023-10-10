@@ -66,11 +66,12 @@ def delete_user(email: str, db: Session = Depends(get_db)):
     return {"success": True}
 
 
-# [TODO]: Get patrol details and all its runs
+# Get patrol details and all its runs
 @app.get("/patrol/{patrol_id}/run/{run_id}")
 def get_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db)):
     patrol_details = (
-        db.query(Patrol, PatrolSetting)
+        db.query(Patrol, PatrolSetting, PatrolGroup.name)
+        .outerjoin(PatrolGroup, Patrol.group_id == PatrolGroup.id)
         .outerjoin(PatrolSetting, Patrol.id == PatrolSetting.patrol_id)
         .filter(Patrol.id == patrol_id)
         .first()
@@ -79,15 +80,24 @@ def get_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Patrol not found.")
 
     all_runs = (
-        db.query(PatrolRun.status, PatrolRun.return_value, PatrolRun.severity)
+        db.query(
+            PatrolRun.id,
+            PatrolRun.status,
+            PatrolRun.return_value,
+            PatrolRun.severity,
+            PatrolRun.end_time,
+        )
         .filter_by(patrol_id=patrol_id)
         .all()
     )
-    current_run_details = (
-        db.query(PatrolRun).filter_by(id=run_id, patrol_id=patrol_id).first()
+    latest_run_details = (
+        db.query(PatrolRun)
+        .filter_by(patrol_id=patrol_id, id=run_id)
+        .order_by(PatrolRun.id.desc())
+        .first()
     )
 
-    if not current_run_details:
+    if not latest_run_details:
         raise HTTPException(
             status_code=404, detail="Run not found for the given patrol."
         )
@@ -96,19 +106,22 @@ def get_patrol_run(patrol_id: int, run_id: int, db: Session = Depends(get_db)):
     for run in all_runs:
         all_runs_array.append(
             {
+                "id": run.id,
                 "status": run.status,
                 "severity": run.severity,
                 "return_value": run.return_value,
+                "end_time": run.end_time,
             }
         )
 
     return {
         "patrol": {
+            "group_name": patrol_details[2],
             "details": patrol_details[0].__dict__,
             "settings": patrol_details[1].__dict__,
         },
         "allRuns": all_runs_array,
-        "currentRunDetails": current_run_details.__dict__,
+        "currentRunDetails": latest_run_details.__dict__,
     }
 
 

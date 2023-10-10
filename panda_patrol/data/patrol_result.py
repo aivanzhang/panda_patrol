@@ -101,7 +101,9 @@ class PandaResult:
             "logs": self.logs or "",
             "return_value": self.return_value or "",
             "patrol_code": self.patrol_code or "",
-            "exception": "\n".join(traceback.format_tb(self.exception.__traceback__))
+            "exception": "".join(
+                traceback.TracebackException.from_exception(self.exception).format()
+            )
             if self.exception
             else "",
         }
