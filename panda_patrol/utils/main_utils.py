@@ -1,6 +1,8 @@
 import argparse
+import os
 import uvicorn
 import json
+import webbrowser
 
 
 def main():
@@ -22,9 +24,14 @@ def main():
     args = parser.parse_args()
 
     url = "http://{}:{}".format(args.host, args.port)
-    with open("panda_patrol/backend/static/config.json", "w") as f:
+
+    __location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__))
+    )
+    with open(os.path.join(__location__, "../backend/static/config.json"), "w") as f:
         json.dump({"PANDA_PATROL_URL": url}, f)
 
+    webbrowser.open(url)
     uvicorn.run(
         "panda_patrol.backend.app:app", host=args.host, port=args.port, reload=True
     )

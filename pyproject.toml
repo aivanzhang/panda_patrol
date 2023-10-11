@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "panda-patrol"
-version = "0.0.1"
+version = "0.0.5"
 authors = [
   { name="Ivan Zhang", email="ivanzhangofficial@gmail.com" },
 ]
-description = "Monitor your data quality tests"
+description = "🐼 Patrol your data tests"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 license = {file = "LICENSE"}
 
 [project.urls]

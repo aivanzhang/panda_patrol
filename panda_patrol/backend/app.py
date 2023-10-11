@@ -9,8 +9,11 @@ from panda_patrol.backend.database.models import *
 from panda_patrol.backend.models import *
 
 app = FastAPI()
-
 origins = ["*"]
+static_dir_path = os.path.join(
+    os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__))), "./static"
+)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,7 +26,7 @@ app.add_middleware(
 
 app.mount(
     "/static",
-    StaticFiles(directory="panda_patrol/backend/static"),
+    StaticFiles(directory=static_dir_path),
     name="static",
 )
 
@@ -558,9 +561,9 @@ def summary(db: Session = Depends(get_db)):
 
 @app.get("/config.json")
 def config():
-    return JSONResponse(json.load(open("panda_patrol/backend/static/config.json")))
+    return JSONResponse(json.load(open(os.path.join(static_dir_path, "./config.json"))))
 
 
 @app.get("/{full_path:path}")
 def serve_static(full_path: str):
-    return HTMLResponse(open("panda_patrol/backend/static/index.html").read())
+    return HTMLResponse(open(os.path.join(static_dir_path, "./index.html")).read())

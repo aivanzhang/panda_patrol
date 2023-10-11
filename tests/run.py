@@ -13,7 +13,7 @@ def run_tests_on_dataframe(df):
             static_postive_min = int(static_parameter("is_positive", patrol_id, 4))
             df["is_positive"] = df["values"].apply(lambda num: num > postive_min)
             # print(patrol_id, df)
-            # return "POSITIVE"
+            return "POSITIVE"
 
         @patrol("is_even", severity=Severity.INFO)
         def is_even(patrol_id):
