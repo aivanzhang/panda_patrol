@@ -16,7 +16,7 @@ Call: https://calendly.com/aivanzhang/chat
 **See [DBT]()** on how to add panda patrols into your DBT-based data pipelines. -->
 
 ## Overview
-Wrap your existing data tests within data pipelines to automatically generate dashboards, alerting, and silencing. Currently this library does not deal with the orchestration of these data tests. However this may be added in the future depending on demand.
+Wrap your existing data tests to automatically generate dashboards, alerting, and silencing. Currently this library does not deal with the orchestration of these data tests. However this may be added in the future depending on demand.
 
 
 ## Quickstart
@@ -109,4 +109,4 @@ Go to `PANDA_PATROL_URL` to view the results of your data tests. You should see 
 **Results page of a specific data test run**
 ![Log](run.png)
 
-:tada: Congrats! :tada: You have created your first data test minitor! See the [documentation](https://github.com/aivanzhang/panda-patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
+:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda-patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
