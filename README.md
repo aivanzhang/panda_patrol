@@ -60,9 +60,9 @@ def hackernews_top_stories(context: AssetExecutionContext):
 
         # DATA TEST: Make sure that the item's URL is a valid URL
         for item in results:
-			print(item["url"])
-			get_item_response = requests.get(item["url"])
-			assert get_item_response.status_code == 200
+		print(item["url"])
+		get_item_response = requests.get(item["url"])
+		assert get_item_response.status_code == 200
     ...
 ```
 After:
