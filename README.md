@@ -84,16 +84,15 @@ def hackernews_top_stories(context: AssetExecutionContext):
 
     # DATA TEST: Make sure that the item's URL is a valid URL
 +   with patrol_group("Hackernews Items are Valid") as patrol:
-
-+ 		@patrol("URLs work", severity=Severity.CRITICAL)
-+		def urls_work(patrol_id):
-            """URLs for stories should work."""
-            for item in results:
-                print(item["url"])
-                get_item_response = requests.get(item["url"])
-                assert get_item_response.status_code == 200
-
-            return len(results)
++	@patrol("URLs work", severity=Severity.CRITICAL)
++	def urls_work(patrol_id):
+		"""URLs for stories should work."""
+		for item in results:
+			print(item["url"])
+			get_item_response = requests.get(item["url"])
+			assert get_item_response.status_code == 200
+		
+		return len(results)
     ...
 ```
 ### 5) Run your data pipeline
