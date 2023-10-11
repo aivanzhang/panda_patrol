@@ -44,6 +44,15 @@ def get_users(db: Session = Depends(get_db)):
     return users
 
 
+# Get an user
+@app.get("/user/{id}")
+def get_user(id: str, db: Session = Depends(get_db)):
+    user = db.query(Person).filter_by(id=id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found.")
+    return user.__dict__ if user else {}
+
+
 # Add a new user
 @app.post("/user")
 def add_user(person: PersonRequest, db: Session = Depends(get_db)):
@@ -414,7 +423,7 @@ def update_patrol_parameters(
     return {"success": True}
 
 
-# Get patrol settings for a patrol group and patrol
+# Get patrol settings for a patrol id
 @app.get("/patrol_settings/{patrol}")
 def get_patrol_settings(
     patrol: str,
@@ -423,6 +432,24 @@ def get_patrol_settings(
     patrol_settings = (
         db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol).first()
     )
+    return patrol_settings.__dict__ if patrol_settings else {}
+
+
+# Get patrol settings for a patrol group name and patrol name
+@app.get("/patrol_settings/{patrol_group}/{patrol}")
+def get_patrol_settings(
+    patrol_group: str,
+    patrol: str,
+    db: Session = Depends(get_db),
+):
+    patrol_settings = (
+        db.query(PatrolSetting)
+        .join(Patrol, PatrolSetting.patrol_id == Patrol.id)
+        .join(PatrolGroup, Patrol.group_id == PatrolGroup.id)
+        .filter(PatrolGroup.name == patrol_group, Patrol.name == patrol)
+        .first()
+    )
+
     return patrol_settings.__dict__ if patrol_settings else {}
 
 

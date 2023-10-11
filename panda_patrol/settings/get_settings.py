@@ -1,0 +1,15 @@
+import requests
+import os
+
+
+def get_settings(patrol_group, patrol):
+    patrol_url = os.environ.get("PANDA_PATROL_URL")
+    if patrol_url:
+        response = requests.get(f"{patrol_url}/patrol_settings/{patrol_group}/{patrol}")
+        try:
+            response.raise_for_status()
+        except requests.exceptions.HTTPError as e:
+            return "Request failed with error: " + str(e)
+        return response.json()
+
+    return {}
