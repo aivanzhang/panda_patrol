@@ -89,11 +89,17 @@ def patrol_group(
             if exception:
                 print(exception)
 
+        patrol_code = "# Could not retrieve patrol code. Note that if you're using dbt the patrol code will not be available."
+        try:
+            patrol_code = inspect.getsource(context["func"])
+        except:
+            pass
         end = datetime.utcnow()
 
         patrol_info = {
             "patrol_group": group_name,
             "patrol": context["name"],
+            "patrol_code": patrol_code,
             "severity": context["severity"],
             "status": status,
             "logs": patrol_logs.getvalue().strip(),

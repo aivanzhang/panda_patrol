@@ -14,7 +14,10 @@ from sqlalchemy.orm import sessionmaker, relationship
 
 PANDA_DATABASE_URL = os.getenv("PANDA_DATABASE_URL")
 Base = declarative_base()
-engine = create_engine(PANDA_DATABASE_URL)
+engine = create_engine(
+    PANDA_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+)
 SessionLocal = sessionmaker(bind=engine)
 
 
