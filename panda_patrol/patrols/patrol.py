@@ -80,6 +80,8 @@ def patrol_group(
             except Exception as e:
                 status = Status.FAILURE
                 exception = e
+        else:
+            status = Status.SKIPPED
 
         sys.stdout = sys.__stdout__
         if context["store_logs"] or os.environ.get("PANDA_PATROL_ENV") == "dev":
