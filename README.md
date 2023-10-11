@@ -37,7 +37,7 @@ SMTP_USER
 SMTP_PASS
 PATROL_EMAIL
 ```
-See [`.env.example`](https://github.com/aivanzhang/panda-patrol/tree/main/;env.example) for more information about how to set these environment variables.
+See [`.env.example`](https://github.com/aivanzhang/panda_patrol/blob/main/.env.example) for more information about how to set these environment variables.
 ### 3) Start the panda-patrol server. This should spin up a website at `PANDA_PATROL_URL`.
 ```bash
 python -m panda_patrol
@@ -109,4 +109,4 @@ Go to `PANDA_PATROL_URL` to view the results of your data tests. You should see 
 **Results page of a specific data test run**
 ![Log](run.png)
 
-:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda-patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
+:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
