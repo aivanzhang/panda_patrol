@@ -45,7 +45,19 @@ python -m panda_patrol
 ### 4) Wrap your existing data tests
 Spin up a new data test dashboard by wrapping your existing data tests with `patrol_group` and `@patrol`. The following example shows how to wrap a data test in a dagster pipeline. However, you can use whatever Python-based data pipeline.
 
-Before (`hello-dagster.py` from https://docs.dagster.io/getting-started/hello-dagster):
+At a high level, you do the following:
+1. Import `patrol_group` and `@patrol`
+2. Group several data tests with `patrol_group`
+3. Wrap each individual existing data test with `@patrol`
+```python
+from panda_patrol.patrols import patrol_group
+...
+with patrol_group(PATROL_GROUP_NAME) as patrol:
+    @patrol(PATROL_NAME)
+    def DATA_TEST_NAME(patrol_id):
+        ...
+```
+Here is a more detailed example of how to wrap a data test in a dagster pipeline. Before (`hello-dagster.py` from https://docs.dagster.io/getting-started/hello-dagster):
 ```python
 def hackernews_top_stories(context: AssetExecutionContext):
     """Get items based on story ids from the HackerNews items endpoint."""
