@@ -1,7 +1,7 @@
 # <img src="panda-patrol.png" alt="Panda Patrol" width="50"/> Panda Patrol
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.8-blue.svg) 
 
-**Add dashboards, alerting, and silencing to your data tests with < 10  lines of code.**
+**Add dashboards, alerting, and silencing to your data tests with** <ins>**< 10  lines of code.**</ins>
 
 **Questions and feedback** 
 
