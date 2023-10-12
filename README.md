@@ -37,8 +37,8 @@ SMTP_USER
 SMTP_PASS
 PATROL_EMAIL
 ```
-See [`.env.example`](https://github.com/aivanzhang/panda_patrol/blob/main/.env.example) for more information about how to set these environment variables.
-### 3) Start the panda-patrol server. This should spin up a website at `PANDA_PATROL_URL`.
+See [`.env.example`](https://github.com/aivanzhang/panda_patrol/blob/main/.env.example) for more information about how to set these environment variables. See [Environment Variables](https://github.com/aivanzhang/panda_patrol/wiki/Environment-Variables) for more information about each environment variable.
+### 3) Start the panda-patrol server. This will spin up a website at `PANDA_PATROL_URL`.
 ```bash
 python -m panda_patrol
 ```
