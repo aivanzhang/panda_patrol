@@ -109,6 +109,9 @@ def hackernews_top_stories(context: AssetExecutionContext):
 		return len(results)
     ...
 ```
+>❗IMPORTANT\
+> Note that each data test method (i.e. `urls_work`) should have only one parameter `patrol_id`. This parameter will be useful when defining parameters for your data tests in the [Parameters](https://github.com/aivanzhang/panda_patrol/wiki/Parameters).
+
 ### 5) Run your data pipeline
 Start your data pipelines as you normally would. Then run the step in the pipeline with the test. Here we use dagster to run the data tests. However, you can use whatever Python-based data pipeline.
 ```bash
