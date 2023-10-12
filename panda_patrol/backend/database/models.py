@@ -43,6 +43,7 @@ class Patrol(Base):
     group = relationship("PatrolGroup", back_populates="patrols")
     runs = relationship("PatrolRun", back_populates="patrol")
     setting = relationship("PatrolSetting", uselist=False, back_populates="patrol")
+    is_active = Column(Boolean, default=True)
 
 
 class PatrolRun(Base):

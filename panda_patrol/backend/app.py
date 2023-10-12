@@ -157,6 +157,13 @@ def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)
         patrol = Patrol(name=patrol_run.patrol, group_id=patrol_group.id)
         db.add(patrol)
         db.commit()
+    else:
+        db.query(Patrol).filter_by(id=patrol.id).update(
+            {
+                Patrol.is_active: True,
+            }
+        )
+        db.commit()
 
     # Create or get patrol_settings
     patrol_setting = db.query(PatrolSetting).filter_by(patrol_id=patrol.id).first()
@@ -310,6 +317,34 @@ def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
         "settings": patrol_settings.__dict__ if patrol_settings else {},
         "runs": runs_array,
     }
+
+
+# Delete a patrol
+@app.delete("/patrol/{patrol_id}")
+def delete_patrol(patrol_id: int, db: Session = Depends(get_db)):
+    patrol = db.query(Patrol).filter(Patrol.id == patrol_id).first()
+    if not patrol:
+        raise HTTPException(status_code=404, detail="Patrol not found.")
+
+    patrol_setting = (
+        db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol_id).first()
+    )
+    if patrol_setting:
+        db.query(PatrolParameter).filter(
+            PatrolParameter.setting_id == patrol_setting.id
+        ).delete()
+
+    # Delete the patrol's setting
+    db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol_id).delete()
+
+    # Delete associated runs for the patrol
+    db.query(PatrolRun).filter(PatrolRun.patrol_id == patrol_id).delete()
+
+    # Delete the patrol itself
+    db.query(Patrol).filter(Patrol.id == patrol_id).delete()
+
+    db.commit()
+    return {"success": True}
 
 
 # Get all patrol parameters for a patrol group and patrol
@@ -520,6 +555,22 @@ def reset_parameters(
             PatrolParameter.setting_id == patrol_setting.id
         ).update({PatrolParameter.is_active: False})
         db.commit()
+
+    return {"success": True}
+
+
+@app.post("/reset_patrol_group")
+def reset_patrol_group(
+    request: PatrolGroupResetParametersRequest, db: Session = Depends(get_db)
+):
+    patrol_group = db.query(PatrolGroup).filter_by(name=request.patrol_group).first()
+    if not patrol_group:
+        return {"success": True}
+
+    db.query(Patrol).filter_by(group_id=patrol_group.id).update(
+        {Patrol.is_active: False}
+    )
+    db.commit()
 
     return {"success": True}
 

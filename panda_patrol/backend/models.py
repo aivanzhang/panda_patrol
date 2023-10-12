@@ -46,3 +46,7 @@ class PatrolSettingRequest(BaseModel):
 class PatrolResetParametersRequest(BaseModel):
     patrol_group: str
     patrol: str
+
+
+class PatrolGroupResetParametersRequest(BaseModel):
+    patrol_group: str

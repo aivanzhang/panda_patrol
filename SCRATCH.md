@@ -1,4 +1,3 @@
-- Airflow, DBT, Dagster
+- DBT, Airflow, Dagster
 - Not local setup
 - documentation
-- inactive patrols
