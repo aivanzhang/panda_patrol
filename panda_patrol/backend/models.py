@@ -18,7 +18,6 @@ class PatrolRunCreate(BaseModel):
     patrol_code: str
     logs: str
     return_value: str
-    duration: float
     exception: str
 
 
