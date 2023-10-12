@@ -7,7 +7,7 @@ import pandas as pd
 def run_tests_on_dataframe(df):
     with patrol_group("numeric tests") as patrol:
         # Apply tests to the 'values' column and create new columns for results
-        @patrol("is_positive", severity=Severity.INFO)
+        @patrol("is_positive2", severity=Severity.INFO)
         def is_positive(patrol_id):
             postive_min = int(adjustable_parameter("is_positive", patrol_id, 0))
             static_postive_min = int(static_parameter("is_positive", patrol_id, 4))
