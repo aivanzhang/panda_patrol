@@ -1,1 +1,3 @@
-{"PANDA_PATROL_URL": "http://localhost:8000"}
+{
+    "PANDA_PATROL_URL":"http://localhost:8000"
+}

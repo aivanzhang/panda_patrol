@@ -70,8 +70,6 @@ class PandaResult:
         self.logs = logs
         self.start_time = start_time
         self.end_time = end_time
-        if self.start_time and self.end_time:
-            self.duration = (self.end_time - self.start_time).total_seconds()
 
         # Optional attributes
         self.return_value = return_value
@@ -97,7 +95,6 @@ class PandaResult:
             "severity": self.severity.value,
             "start_time": self.start_time.isoformat(),
             "end_time": self.end_time.isoformat(),
-            "duration": self.duration,
             "logs": self.logs or "",
             "return_value": self.return_value or "",
             "patrol_code": self.patrol_code or "",
