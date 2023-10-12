@@ -171,6 +171,13 @@ def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)
         patrol_setting = PatrolSetting(patrol_id=patrol.id)
         db.add(patrol_setting)
         db.commit()
+    else:
+        db.query(PatrolSetting).filter_by(patrol_id=patrol.id).update(
+            {
+                PatrolSetting.silenced_until: None,
+            }
+        )
+        db.commit()
 
     # Create patrol_run
     patrol_run_instance = PatrolRun(
