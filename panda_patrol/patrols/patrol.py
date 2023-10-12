@@ -105,7 +105,7 @@ def patrol_group(
             "severity": context["severity"],
             "status": status,
             "logs": patrol_logs.getvalue().strip(),
-            "return_value": return_value,
+            "return_value": f"{return_value}",
             "start_time": start,
             "end_time": end,
             "exception": exception,

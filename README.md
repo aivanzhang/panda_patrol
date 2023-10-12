@@ -43,6 +43,8 @@ See [`.env.example`](https://github.com/aivanzhang/panda_patrol/blob/main/.env.e
 python -m panda_patrol
 ```
 ### 4) Wrap your existing data tests
+Spin up a new data test dashboard by wrapping your existing data tests with `patrol_group` and `@patrol`. The following example shows how to wrap a data test in a dagster pipeline. However, you can use whatever Python-based data pipeline.
+
 Before (`hello-dagster.py` from https://docs.dagster.io/getting-started/hello-dagster):
 ```python
 def hackernews_top_stories(context: AssetExecutionContext):
@@ -67,7 +69,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
 ```
 After:
 ```diff
-+ from panda_patrol.patrols import patrol_group, Severity
++ from panda_patrol.patrols import patrol_group
 ...
 def hackernews_top_stories(context: AssetExecutionContext):
     """Get items based on story ids from the HackerNews items endpoint."""
@@ -84,7 +86,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
 
     # DATA TEST: Make sure that the item's URL is a valid URL
 +   with patrol_group("Hackernews Items are Valid") as patrol:
-+	@patrol("URLs work", severity=Severity.CRITICAL)
++	@patrol("URLs work")
 +	def urls_work(patrol_id):
 		"""URLs for stories should work."""
 		for item in results:
@@ -96,7 +98,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
     ...
 ```
 ### 5) Run your data pipeline
-Run your data pipelines as you normally would. Here we use dagster to run the data tests. However, you can use whatever Python-based data pipeline.
+Start your data pipelines as you normally would. Then run the step in the pipeline with the test. Here we use dagster to run the data tests. However, you can use whatever Python-based data pipeline.
 ```bash
 dagster dev -f hello-dagster.py
 ```
@@ -104,9 +106,11 @@ dagster dev -f hello-dagster.py
 ### 6) View the results
 Go to `PANDA_PATROL_URL` to view the results of your data tests. You should see something like this:
 
-**Main page**
+**Dashboard**
+
 ![Panda Patrol Dashboard](dashboard.png)
-**Results page of a specific data test run**
+
+**Run Details**
 ![Log](run.png)
 
 :tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
