@@ -58,7 +58,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
 ```
 
 ## Setup
-1. Install the requirements.
+1. Install the requirements. This installs the necessary dependencies for Dagster and the Dagster assets as well as the Panda Patrol package.
     ```bash
     pip install -r requirements.txt
     ```
@@ -67,12 +67,12 @@ def hackernews_top_stories(context: AssetExecutionContext):
     dagster dev -f hello-dagster.py
     ```
 3. Modify the `.env`. Note that the `SMTP_*` and `PATROL_EMAIL` values are dummy values. You will need to replace them with your own values. 
-4. Start the panda-patrol server. This is needed to run the patrols.
+4. Start the Panda Patrol server. This is needed to run the patrols.
     ```bash
     python -m panda_patrol
     ```
 5. Open the Dagster UI at http://localhost:3000/ and materialize the `hackernews_top_story_ids` and `hackernews_top_stories` assets.
-6. After the assets finish, you should see the results of the patrols in the panda-patrol UI at http://localhost:8000. It should look like
+6. After the assets finish, you should see the results of the patrols in the Panda Patrol UI at http://localhost:8000. It should look like
     ![Panda Patrol UI](result.png)
 
 :tada: Congrats! :tada: You have now added Panda Patrols to Dagster! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
