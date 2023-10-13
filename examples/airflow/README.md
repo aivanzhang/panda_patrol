@@ -2,7 +2,7 @@
 This example shows how Panda Patrols can be added to data tests inside your Airflow DAGs. It creates a basic Airflow DAG with a single task `get_values_task` task that has a list of values (that it has gotten from somewhere) and runs a few tests on that list of values. Patrols are already setup for the tests. 
 
 ## TLDR
-**Without Panda Patrols:**
+**Without Panda Patrols**
 ```python
 ...
 def get_values():
@@ -17,7 +17,8 @@ def get_values():
         ), f"Entry with id {entry['id']} has zero value!"
 ...
 ```
-**With Panda Patrols:**
+**With Panda Patrols**
+
 This file is located at `dags/get_values.py`
 ```diff
 + from panda_patrol.patrols import patrol_group
