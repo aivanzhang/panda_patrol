@@ -1,0 +1,5 @@
+panda_patrol
+dagster
+requests
+pandas
+dagster-webserver
