@@ -13,6 +13,6 @@ __pycache__
 .pypirc
 .vscode
 *.db
-*.env
+/.env
 
 .DS_Store
