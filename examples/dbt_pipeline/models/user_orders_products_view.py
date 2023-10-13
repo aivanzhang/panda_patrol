@@ -16,7 +16,7 @@ def model(dbt, session):
 
         @patrol("All prices are positive")
         def prices_are_positive(patrol_id):
-            assert (final_df["price"] > 0).all()
+            assert (final_df["product_price"] > 0).all()
             print("All prices are positive")
 
     return final_df
