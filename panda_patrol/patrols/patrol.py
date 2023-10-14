@@ -9,8 +9,6 @@ from panda_patrol.data.patrol_result import PandaResult, Status, Severity
 from panda_patrol.parameters.utils.reset_parameters import reset_parameters
 from panda_patrol.patrol_group.reset_patrol_group import reset_patrol_group
 from panda_patrol.settings.get_settings import get_settings
-from panda_patrol.users.get_user import get_user
-from panda_patrol.utils.email_utils import send_failure_email
 
 
 class PatrolContext(TypedDict):
@@ -58,8 +56,6 @@ def patrol_group(
         reset_parameters(group_name, context["patrol_dict"]["patrol"])
         settings = get_settings(group_name, context["name"])
         should_run = True
-        should_alert = True
-        user_to_alert = None
 
         if bool(settings):
             if settings["silenced_until"]:
@@ -68,11 +64,6 @@ def patrol_group(
                 ).replace(tzinfo=timezone.utc)
                 if silenced_until_time > datetime.now(timezone.utc):
                     should_run = False
-
-            if settings["assigned_to_person"]:
-                user_to_alert = get_user(settings["assigned_to_person"])
-
-            should_alert = settings["alerting"] and user_to_alert
 
         if context["store_logs"]:
             sys.stdout = patrol_logs
@@ -111,10 +102,3 @@ def patrol_group(
             "exception": exception,
         }
         PandaResult(**patrol_info).log()
-
-        if status == Status.FAILURE and should_alert and user_to_alert:
-            send_failure_email(
-                user_to_alert["name"],
-                user_to_alert["email"],
-                patrolInfo=patrol_info,
-            )

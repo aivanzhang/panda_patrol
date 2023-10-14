@@ -1,3 +1,1 @@
-- DBT, Airflow, Dagster
 - Not local setup
-- documentation

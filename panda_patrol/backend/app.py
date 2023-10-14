@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 import json
+from panda_patrol.data.patrol_result import Status
+from panda_patrol.backend.utils.email_utils import send_failure_email
 from panda_patrol.backend.database.models import *
 from panda_patrol.backend.models import *
 
@@ -45,15 +47,6 @@ def get_db():
 def get_users(db: Session = Depends(get_db)):
     users = db.query(Person).all()
     return users
-
-
-# Get an user
-@app.get("/user/{id}")
-def get_user(id: str, db: Session = Depends(get_db)):
-    user = db.query(Person).filter_by(id=id).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found.")
-    return user.__dict__ if user else {}
 
 
 # Add a new user
@@ -193,6 +186,32 @@ def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)
     )
     db.add(patrol_run_instance)
     db.commit()
+
+    # Check if alerts should be sent
+    patrol_setting = db.query(PatrolSetting).filter_by(patrol_id=patrol.id).first()
+    user_to_alert = None
+    if patrol_setting.alerting and patrol_setting.assigned_to_person:
+        user_to_alert = (
+            db.query(Person).filter_by(id=patrol_setting.assigned_to_person).first()
+        )
+
+    # Send email if patrol failed and alerting is enabled
+    if patrol_run.status == Status.FAILURE.value and user_to_alert:
+        send_failure_email(
+            user_to_alert.name,
+            user_to_alert.email,
+            patrolInfo={
+                "patrol_group": patrol_run.patrol_group,
+                "patrol": patrol_run.patrol,
+                "severity": patrol_run.severity,
+                "status": patrol_run.status,
+                "logs": patrol_run.logs,
+                "return_value": patrol_run.return_value,
+                "start_time": patrol_run.start_time,
+                "end_time": patrol_run.end_time,
+                "exception": patrol_run.exception,
+            },
+        )
 
     return {"success": True}
 
