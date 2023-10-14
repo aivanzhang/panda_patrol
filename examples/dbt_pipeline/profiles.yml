@@ -1,0 +1,16 @@
+dbt_pipeline:
+  outputs:
+    dev:
+      type: fal
+      db_profile: dev_postgres
+    dev_postgres:
+      type: postgres
+      host: localhost
+      user: ivanzhang
+      password: root
+      port: 5432
+      dbname: test_db
+      schema: public
+      threads: 1
+      connect_timeout: 30
+  target: dev
