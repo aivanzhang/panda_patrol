@@ -1,1 +1,1 @@
-rm -rf ./dist ./data_checks.egg-info
+rm -rf ./dist ./panda_patrol.egg-info
