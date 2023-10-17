@@ -58,7 +58,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
         hackernews_top_story_ids = json.load(f)
 
     results = []
-	# Get information about each item including the url
+    # Get information about each item including the url
     for item_id in hackernews_top_story_ids:
         item = requests.get(
             f"https://hacker-news.firebaseio.com/v0/item/{item_id}.json"
@@ -82,7 +82,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
         hackernews_top_story_ids = json.load(f)
 
     results = []
-	# Get information about each item including the url
+    # Get information about each item including the url
     for item_id in hackernews_top_story_ids:
         item = requests.get(
             f"https://hacker-news.firebaseio.com/v0/item/{item_id}.json"
