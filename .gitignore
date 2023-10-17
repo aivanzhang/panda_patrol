@@ -17,6 +17,7 @@ __pycache__
 
 .DS_Store
 
+*.log
 airflow
 dagster
 dbt_pipeline
