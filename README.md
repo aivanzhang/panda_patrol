@@ -43,10 +43,10 @@ See [`.env.example`](https://github.com/aivanzhang/panda_patrol/blob/main/.env.e
 python -m panda_patrol
 ```
 ### 4) Wrap your existing data tests
-Spin up a new data test dashboard by wrapping your existing data tests with `patrol_group` and `@patrol`. The following example shows how to wrap a data test in a dagster pipeline. However, you can use whatever Python-based data pipeline.
+Spin up a new data test dashboard by wrapping your existing data tests with `patrol_group` and `patrol`. The following example shows how to wrap a data test in a dagster pipeline. However, you can use whatever Python-based data pipeline.
 
 At a high level, you do the following:
-1. Import `patrol_group` and `@patrol`
+1. Import `patrol_group`
 2. Group several data tests with `patrol_group`
 3. Wrap each individual existing data test with `@patrol`
 ```python
