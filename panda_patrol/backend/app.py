@@ -239,7 +239,7 @@ def get_patrol_groups(db: Session = Depends(get_db)):
 
 
 # Get information about a group's patrols' latest run
-@app.get("/patrol_group/{group_name}")
+@app.get("/patrol_group/{group_name:path}")
 def get_patrol_group(group_name: str, db: Session = Depends(get_db)):
     patrol_group = db.query(PatrolGroup).filter(PatrolGroup.name == group_name).first()
     if not patrol_group:
@@ -400,7 +400,7 @@ def delete_patrol_parameter(parameter_id: int, db: Session = Depends(get_db)):
 
 
 # Get value for a parameter given the patrol group, patrol, parameter type and parameter id
-@app.get("/patrol_parameters/{patrol_group}/{patrol}/{type}/{parameter_id}")
+@app.get("/patrol_parameters/{patrol_group}/{patrol:path}/{type:path}/{parameter_id}")
 def get_patrol_parameters(
     patrol_group: str,
     patrol: str,
@@ -500,7 +500,7 @@ def get_patrol_settings(
 
 
 # Get patrol settings for a patrol group name and patrol name
-@app.get("/patrol_settings/{patrol_group}/{patrol}")
+@app.get("/patrol_settings/{patrol_group:path}/{patrol:path}")
 def get_patrol_settings(
     patrol_group: str,
     patrol: str,
