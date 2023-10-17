@@ -19,7 +19,10 @@ Call: https://calendly.com/aivanzhang/chat
 Wrap your existing data tests to automatically generate dashboards, alerting, and silencing. Currently this library does not deal with the orchestration of these data tests. However this may be added in the future depending on demand.
 
 
-## Quickstart
+## Getting Started (Demo)
+This is a short tutorial that creates a patrol around a data test and then displays this patrol on a **publicly accessible** dashboard here: https://panda-patrol.vercel.app/dashboard. This tutorial uses [dagster](https://docs.dagster.io/) to run the data tests. However, you can use whatever Python-based data pipeline.
+
+
 ### 1) Installation
 Install the latest version of panda-patrol using pip:
 ```bash
@@ -28,22 +31,12 @@ pip install panda-patrol
 ### 2) Setup the environment variables
 In an existing or new `.env` file, set the following environment variables:
 ```bash
-PANDA_PATROL_URL
-PANDA_PATROL_ENV
-PANDA_DATABASE_URL
-SMTP_SERVER
-SMTP_PORT
-SMTP_USER
-SMTP_PASS
-PATROL_EMAIL
+PANDA_PATROL_URL=https://panda-patrol.vercel.app/dashboard
+PANDA_PATROL_ENV=production
 ```
-See [`.env.example`](https://github.com/aivanzhang/panda_patrol/blob/main/.env.example) for more information about how to set these environment variables. See [Environment Variables](https://github.com/aivanzhang/panda_patrol/wiki/Environment-Variables) for more information about each environment variable.
-### 3) Start the panda-patrol server. This will spin up a website at `PANDA_PATROL_URL`.
-```bash
-python -m panda_patrol
-```
-### 4) Wrap your existing data tests
-Spin up a new data test dashboard by wrapping your existing data tests with `patrol_group` and `patrol`. The following example shows how to wrap a data test in a dagster pipeline. However, you can use whatever Python-based data pipeline.
+See [`.env.example`](https://github.com/aivanzhang/panda_patrol/blob/main/.env.example) for more information about how to set these and other environment variables. See [Environment Variables](https://github.com/aivanzhang/panda_patrol/wiki/Environment-Variables) for more information about each environment variable.
+### 3) Wrap your existing data tests
+Spin up a new data test dashboard by wrapping your existing data tests with `patrol_group` and `@patrol`. The following example shows how to wrap a data test in a dagster pipeline. However, you can use whatever Python-based data pipeline.
 
 At a high level, you do the following:
 1. Import `patrol_group`
@@ -74,9 +67,9 @@ def hackernews_top_stories(context: AssetExecutionContext):
 
         # DATA TEST: Make sure that the item's URL is a valid URL
         for item in results:
-		print(item["url"])
-		get_item_response = requests.get(item["url"])
-		assert get_item_response.status_code == 200
+            print(item["url"])
+            get_item_response = requests.get(item["url"])
+            assert get_item_response.status_code == 200
     ...
 ```
 After:
@@ -112,20 +105,13 @@ def hackernews_top_stories(context: AssetExecutionContext):
 >❗IMPORTANT\
 > Note that each data test method (i.e. `urls_work`) should have only one parameter `patrol_id`. This parameter will be useful when defining parameters for your data tests in the [Parameters](https://github.com/aivanzhang/panda_patrol/wiki/Parameters).
 
-### 5) Run your data pipeline
+### 4) Run your data pipeline
 Start your data pipelines as you normally would. Then run the step in the pipeline with the test. Here we use dagster to run the data tests. However, you can use whatever Python-based data pipeline.
 ```bash
 dagster dev -f hello-dagster.py
 ```
 
-### 6) View the results
-Go to `PANDA_PATROL_URL` to view the results of your data tests. You should see something like this:
+### 5) View the results
+Go to https://panda-patrol.vercel.app/dashboard to view the results of your data tests. Note you may see other people's data tests on this dashboard as well. This is because this dashboard is publicly accessible.
 
-**Dashboard**
-
-![Panda Patrol Dashboard](dashboard.png)
-
-**Run Details**
-![Log](run.png)
-
-:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
+:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on how to spin up your own Panda Patrol server and other features like adjustable parameters, alerting, and silencing.
