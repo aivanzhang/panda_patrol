@@ -114,4 +114,4 @@ dagster dev -f hello-dagster.py
 ### 5) View the results
 Go to https://panda-patrol.vercel.app/dashboard to view the results of your data tests. Note you may see other people's data tests on this dashboard as well. This is because this dashboard is publicly accessible.
 
-:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on how to spin up your own Panda Patrol server and other features like adjustable parameters, alerting, and silencing.
+:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information and [Quickstart](https://github.com/aivanzhang/panda_patrol/wiki/Quickstart) on how to spin up your own Panda Patrol server and other features like adjustable parameters, alerting, and silencing.
