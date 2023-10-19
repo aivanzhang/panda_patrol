@@ -1,4 +1,5 @@
 from panda_patrol.patrols import patrol_group
+from panda_patrol.parameters import adjustable_parameter
 
 
 def model(dbt, session):
@@ -14,9 +15,17 @@ def model(dbt, session):
 
     with patrol_group("User Orders") as patrol:
 
-        @patrol("All prices are positive")
-        def prices_are_positive(patrol_id):
-            assert (final_df["product_price"] > 0).all()
-            print("All prices are positive")
+        @patrol("All prices within expected range")
+        def prices_within_range(patrol_id):
+            print(final_df)
+            min_price = float(adjustable_parameter("min_price", patrol_id, 0))
+            max_price = float(adjustable_parameter("max_price", patrol_id, 100000))
+            assert (
+                final_df["product_price"] >= min_price
+            ).all(), f"Found value less than the min of {min_price}"
+            assert (
+                final_df["product_price"] <= max_price
+            ).all(), f"Found value more than the max of {max_price}"
+            return final_df.describe().to_dict()
 
     return final_df
