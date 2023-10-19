@@ -316,6 +316,20 @@ def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
     patrol_settings = (
         db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol_id).first()
     )
+    profiles = (
+        db.query(PatrolProfile.id, PatrolProfile.time)
+        .filter(PatrolProfile.patrol_id == patrol_id)
+        .all()
+    )
+    profiles_array = []
+    for profile in profiles:
+        profiles_array.append(
+            {
+                "id": profile.id,
+                "time": profile.time,
+            }
+        )
+
     runs = (
         db.query(
             PatrolRun.id,
@@ -342,6 +356,7 @@ def get_patrol(patrol_id: int, db: Session = Depends(get_db)):
         "patrol": patrol.__dict__ if patrol else {},
         "settings": patrol_settings.__dict__ if patrol_settings else {},
         "runs": runs_array,
+        "profiles": profiles_array,
     }
 
 
@@ -634,6 +649,36 @@ def summary(db: Session = Depends(get_db)):
         "warning": result[5],
         "info": result[6],
     }
+
+
+@app.post("/save_report")
+def save_report(request: PatrolProfileCreate, db: Session = Depends(get_db)):
+    patrol_group = db.query(PatrolGroup).filter_by(name=request.patrol_group).first()
+    if not patrol_group:
+        patrol_group = PatrolGroup(name=request.patrol_group)
+        db.add(patrol_group)
+        db.commit()
+
+    patrol = (
+        db.query(Patrol)
+        .filter_by(name=request.patrol, group_id=patrol_group.id)
+        .first()
+    )
+    if not patrol:
+        patrol = Patrol(name=request.patrol, group_id=patrol_group.id)
+        db.add(patrol)
+        db.commit()
+
+    patrol_profile = PatrolProfile(
+        patrol_id=patrol.id,
+        report=request.report,
+        time=request.time,
+        format=request.format,
+    )
+    db.add(patrol_profile)
+    db.commit()
+
+    return {"success": True}
 
 
 @app.get("/config.json")

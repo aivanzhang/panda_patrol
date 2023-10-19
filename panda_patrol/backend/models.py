@@ -21,6 +21,14 @@ class PatrolRunCreate(BaseModel):
     exception: str
 
 
+class PatrolProfileCreate(BaseModel):
+    patrol_group: str
+    patrol: str
+    report: str
+    time: datetime
+    format: str
+
+
 class SuccessResponse(BaseModel):
     success: bool
 

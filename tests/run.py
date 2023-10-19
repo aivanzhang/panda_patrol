@@ -1,6 +1,8 @@
 from panda_patrol.data.patrol_result import Severity
 from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter, static_parameter
+from panda_patrol.profilers import save_report
+from ydata_profiling import ProfileReport
 import pandas as pd
 
 
@@ -12,6 +14,10 @@ def run_tests_on_dataframe(df):
             postive_min = int(adjustable_parameter("is_positive", patrol_id, 0))
             static_postive_min = int(static_parameter("is_positive", patrol_id, 4))
             df["is_positive"] = df["values"].apply(lambda num: num > postive_min)
+            profile = ProfileReport(df, title="Profiling Report")
+            html_str = profile.to_html()
+            save_report(html_str, "numeric tests", "is_positive", "html")
+
             # print(patrol_id, df)
             return "POSITIVE"
 

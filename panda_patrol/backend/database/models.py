@@ -42,6 +42,7 @@ class Patrol(Base):
     group_id = Column(Integer, ForeignKey("patrol_groups.id"))
     group = relationship("PatrolGroup", back_populates="patrols")
     runs = relationship("PatrolRun", back_populates="patrol")
+    profiles = relationship("PatrolProfile", back_populates="patrol")
     setting = relationship("PatrolSetting", uselist=False, back_populates="patrol")
     is_active = Column(Boolean, default=True)
 
@@ -59,6 +60,16 @@ class PatrolRun(Base):
     start_time = Column(TIMESTAMP)
     end_time = Column(TIMESTAMP)
     exception = Column(Text)
+
+
+class PatrolProfile(Base):
+    __tablename__ = "patrol_profiles"
+    id = Column(Integer, primary_key=True, index=True)
+    patrol_id = Column(Integer, ForeignKey("patrols.id"))
+    patrol = relationship("Patrol", back_populates="profiles")
+    report = Column(Text)
+    time = Column(TIMESTAMP)
+    format = Column(String, index=True)
 
 
 class PatrolSetting(Base):
