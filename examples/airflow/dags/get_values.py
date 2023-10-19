@@ -4,6 +4,7 @@ from airflow import DAG
 from airflow.operators.dummy_operator import DummyOperator
 from airflow.operators.python_operator import PythonOperator
 from panda_patrol.patrols import patrol_group
+from panda_patrol.parameters import adjustable_parameter
 
 # Allow requests to access hosts directly without a proxy defined
 os.environ["no_proxy"] = "*"
@@ -21,12 +22,13 @@ def get_values():
         "Value Checks",
     ) as patrol:
 
-        @patrol("All values are non-zero")
-        def no_zero_values(patrol_id):
+        @patrol("All values are above a certain threshold")
+        def values_above_threshold(patrol_id):
+            value_threshold = float(adjustable_parameter("threshold", patrol_id, -10))
             for entry in data:
                 assert (
-                    entry["value"] != 0
-                ), f"Entry with id {entry['id']} has zero value!"
+                    entry["value"] > value_threshold
+                ), f"Entry with id {entry['id']} is below the threshold of {value_threshold}!"
 
 
 dag = DAG(
