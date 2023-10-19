@@ -2,7 +2,8 @@ import json
 
 import pandas as pd
 import requests
-from panda_patrol.patrols import patrol_group, Severity
+from panda_patrol.patrols import patrol_group
+from panda_patrol.parameters import adjustable_parameter
 
 from dagster import AssetExecutionContext, MetadataValue, asset
 
@@ -41,7 +42,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
     #     assert get_item_response.status_code == 200
 
     # TEST: Make sure that the item's URL is a valid URL
-    with patrol_group("Hackernews Items are Valid") as patrol:
+    with patrol_group("Hackernews URLs are Valid") as patrol:
 
         @patrol("URLs work")
         def urls_work(patrol_id):
@@ -50,6 +51,18 @@ def hackernews_top_stories(context: AssetExecutionContext):
                 print(item["url"])
                 get_item_response = requests.get(item["url"])
                 assert get_item_response.status_code == 200
+
+            return len(results)
+
+        @patrol("Expected Number of URLs found")
+        def expected_number_of_urls_found(patrol_id):
+            """We should find the expected number of URLs."""
+            expected_number_urls = int(
+                adjustable_parameter("expected_urls", patrol_id, 5)
+            )
+            assert (
+                len(results) >= expected_number_urls
+            ), f"Expected {expected_number_urls} URLs, found {len(results)}"
 
             return len(results)
 
