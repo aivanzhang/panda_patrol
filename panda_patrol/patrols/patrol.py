@@ -7,7 +7,6 @@ from io import StringIO
 from contextlib import contextmanager
 from panda_patrol.data.patrol_result import PandaResult, Status, Severity
 from panda_patrol.parameters.utils.reset_parameters import reset_parameters
-from panda_patrol.patrol_group.reset_patrol_group import reset_patrol_group
 from panda_patrol.settings.get_settings import get_settings
 
 
@@ -44,7 +43,6 @@ def patrol_group(
 
     yield patrol
 
-    reset_patrol_group(group_name)
     for context in patrols.values():
         start = datetime.utcnow()
         patrol_logs = StringIO()

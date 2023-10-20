@@ -44,7 +44,6 @@ class Patrol(Base):
     runs = relationship("PatrolRun", back_populates="patrol")
     profiles = relationship("PatrolProfile", back_populates="patrol")
     setting = relationship("PatrolSetting", uselist=False, back_populates="patrol")
-    is_active = Column(Boolean, default=True)
 
 
 class PatrolRun(Base):

@@ -150,13 +150,6 @@ def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)
         patrol = Patrol(name=patrol_run.patrol, group_id=patrol_group.id)
         db.add(patrol)
         db.commit()
-    else:
-        db.query(Patrol).filter_by(id=patrol.id).update(
-            {
-                Patrol.is_active: True,
-            }
-        )
-        db.commit()
 
     # Create or get patrol_settings
     patrol_setting = db.query(PatrolSetting).filter_by(patrol_id=patrol.id).first()
@@ -259,12 +252,12 @@ def get_patrol_group(group_name: str, db: Session = Depends(get_db)):
         {"group_id": patrol_group.id},
     ).fetchall()
 
+    patrol_ids = db.query(Patrol.id).filter(Patrol.group_id == patrol_group.id).all()
+    patrol_ids = set([patrol_id[0] for patrol_id in patrol_ids])
     latest_run_date = None
     success_patrols = set()
     failed_patrols = set()
-    patrol_ids = set()
     for patrol in patrols_latest_runs:
-        patrol_ids.add(patrol[0])
         if patrol[2] == "success":
             success_patrols.add(patrol[1])
         elif patrol[2] == "failure":
@@ -377,6 +370,9 @@ def delete_patrol(patrol_id: int, db: Session = Depends(get_db)):
 
     # Delete the patrol's setting
     db.query(PatrolSetting).filter(PatrolSetting.patrol_id == patrol_id).delete()
+
+    # Delete associated profiles for the patrol
+    db.query(PatrolProfile).filter(PatrolProfile.patrol_id == patrol_id).delete()
 
     # Delete associated runs for the patrol
     db.query(PatrolRun).filter(PatrolRun.patrol_id == patrol_id).delete()
@@ -600,22 +596,6 @@ def reset_parameters(
     return {"success": True}
 
 
-@app.post("/reset_patrol_group")
-def reset_patrol_group(
-    request: PatrolGroupResetParametersRequest, db: Session = Depends(get_db)
-):
-    patrol_group = db.query(PatrolGroup).filter_by(name=request.patrol_group).first()
-    if not patrol_group:
-        return {"success": True}
-
-    db.query(Patrol).filter_by(group_id=patrol_group.id).update(
-        {Patrol.is_active: False}
-    )
-    db.commit()
-
-    return {"success": True}
-
-
 # Get summary of all the latest patrols runs
 @app.get("/summary")
 def summary(db: Session = Depends(get_db)):
@@ -651,8 +631,17 @@ def summary(db: Session = Depends(get_db)):
     }
 
 
-@app.post("/save_report")
-def save_report(request: PatrolProfileCreate, db: Session = Depends(get_db)):
+@app.get("/profile/{profile_id}")
+def get_profile(profile_id: int, db: Session = Depends(get_db)):
+    profile = db.query(PatrolProfile).filter_by(id=profile_id).first()
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found.")
+
+    return profile.__dict__
+
+
+@app.post("/profile")
+def save_profile(request: PatrolProfileCreate, db: Session = Depends(get_db)):
     patrol_group = db.query(PatrolGroup).filter_by(name=request.patrol_group).first()
     if not patrol_group:
         patrol_group = PatrolGroup(name=request.patrol_group)
