@@ -7,6 +7,7 @@ from sqlalchemy.sql import text
 import json
 from panda_patrol.data.patrol_result import Status
 from panda_patrol.backend.utils.email_utils import send_failure_email
+from panda_patrol.backend.utils.slack_utils import send_slack_message
 from panda_patrol.backend.database.models import *
 from panda_patrol.backend.models import *
 
@@ -189,22 +190,27 @@ def create_patrol_run(patrol_run: PatrolRunCreate, db: Session = Depends(get_db)
         )
 
     # Send email if patrol failed and alerting is enabled
-    if patrol_run.status == Status.FAILURE.value and user_to_alert:
-        send_failure_email(
-            user_to_alert.name,
-            user_to_alert.email,
-            patrolInfo={
-                "patrol_group": patrol_run.patrol_group,
-                "patrol": patrol_run.patrol,
-                "severity": patrol_run.severity,
-                "status": patrol_run.status,
-                "logs": patrol_run.logs,
-                "return_value": patrol_run.return_value,
-                "start_time": patrol_run.start_time,
-                "end_time": patrol_run.end_time,
-                "exception": patrol_run.exception,
-            },
-        )
+    if patrol_run.status == Status.FAILURE.value:
+        patrolInfo = {
+            "patrol_group": patrol_run.patrol_group,
+            "patrol": patrol_run.patrol,
+            "severity": patrol_run.severity,
+            "status": patrol_run.status,
+            "logs": patrol_run.logs,
+            "return_value": patrol_run.return_value,
+            "start_time": patrol_run.start_time,
+            "end_time": patrol_run.end_time,
+            "exception": patrol_run.exception,
+        }
+        SLACK_WEBHOOK = os.environ.get("SLACK_WEBHOOK")
+        if SLACK_WEBHOOK:
+            send_slack_message(patrolInfo)
+        if user_to_alert:
+            send_failure_email(
+                user_to_alert.name,
+                user_to_alert.email,
+                patrolInfo=patrolInfo,
+            )
 
     return {"success": True}
 

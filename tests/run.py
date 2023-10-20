@@ -19,8 +19,8 @@ class Test:
 
 def run_tests_on_dataframe(df):
     with patrol_group("numeric tests") as patrol:
-        t = Test()
-        patrol("is_positive", severity=Severity.INFO)(t.run_this)
+        # t = Test()
+        # patrol("is_positive", severity=Severity.INFO)(t.run_this)
 
         # Apply tests to the 'values' column and create new columns for results
         @patrol("is_positive2", severity=Severity.INFO)
@@ -43,6 +43,7 @@ def run_tests_on_dataframe(df):
             # save_report(json_str, "numeric tests", "is_positive", "json")
 
             # print(patrol_id, df)
+            assert df["is_positive"].all()
             return "POSITIVE"
 
         # @patrol("is_even", severity=Severity.INFO)

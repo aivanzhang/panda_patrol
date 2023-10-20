@@ -35,8 +35,6 @@ def send_email(subject, body, to_email):
 
 
 def send_failure_email(name, email, patrolInfo):
-    print("Sending failure email")
-    print(name, email, patrolInfo)
     message = f"""
     <html>
         <head>
