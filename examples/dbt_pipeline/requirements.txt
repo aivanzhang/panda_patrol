@@ -1,3 +1,0 @@
-panda_patrol
-dbt-postgres
-dbt-fal

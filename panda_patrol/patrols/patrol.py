@@ -67,7 +67,19 @@ def patrol_group(
             sys.stdout = patrol_logs
         if should_run:
             try:
-                return_value = context["func"](context["patrol_dict"])
+
+                def data_test_wrapper(**kwargs):
+                    function_parameters = context["func"].__code__.co_varnames[
+                        : context["func"].__code__.co_argcount
+                    ]
+                    if "patrol_id" in function_parameters:
+                        return context["func"](
+                            patrol_id=context["patrol_dict"], **kwargs
+                        )
+                    else:
+                        return context["func"](**kwargs)
+
+                return_value = data_test_wrapper()
             except Exception as e:
                 status = Status.FAILURE
                 exception = e

@@ -13,8 +13,6 @@ Call: https://calendly.com/aivanzhang/chat
 
 **See [Dagster](examples/dagster#add-panda-patrols-to-your-dagster-data-tests)** on how to add panda patrols into your Dagster-based data pipelines.
 
-**See [DBT](examples/dbt_pipeline#add-panda-patrols-to-your-dbt-data-tests)** on how to add panda patrols into your DBT-based data pipelines.
-
 ## Overview
 Wrap your existing data tests to automatically generate dashboards, alerting, and silencing. Currently this library does not deal with the orchestration of these data tests. However this may be added in the future depending on demand.
 
