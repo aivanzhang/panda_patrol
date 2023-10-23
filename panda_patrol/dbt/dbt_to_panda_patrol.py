@@ -19,7 +19,6 @@ def dbt_to_panda_patrol(results_json):
         if item["unique_id"].startswith("test."):
             test_objects.append(item)
 
-    patrols_to_add = []
     for test_object in test_objects:
         test_full_name = test_object["unique_id"].split(".")[-2]
         start_time = ""
@@ -42,8 +41,6 @@ def dbt_to_panda_patrol(results_json):
                 test, _, column_id = test_full_name.partition(view)
                 test = test.rstrip("_")
                 column_id = column_id.lstrip("_")
-                if not end_time:
-                    print(test_object)
                 new_patrol = {
                     "patrol_group": view,
                     "patrol": f"{column_id}.{test}",
@@ -55,7 +52,7 @@ def dbt_to_panda_patrol(results_json):
                     if test_object["status"] == "fail"
                     else Status.SKIPPED,
                     "logs": test_object["message"] or "",
-                    "return_value": test_object["failures"],
+                    "return_value": f"{test_object['failures']}",
                     "exception": None,
                     "start_time": start_time,
                     "end_time": end_time,
