@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from panda_patrol.data.patrol_result import PandaResult, Status, Severity
 from panda_patrol.parameters.utils.reset_parameters import reset_parameters
 from panda_patrol.settings.get_settings import get_settings
+from panda_patrol.utils.func_utils import extract_function_source
 
 
 class PatrolContext(TypedDict):
@@ -18,9 +19,7 @@ class PatrolContext(TypedDict):
 
 
 @contextmanager
-def patrol_group(
-    group_name: str,
-):
+def patrol_group(group_name: str, dbt=None):
     patrols: dict[str:PatrolContext] = dict()
 
     def patrol(
@@ -97,6 +96,16 @@ def patrol_group(
             patrol_code = inspect.getsource(context["func"])
         except:
             pass
+        if dbt:
+            try:
+                model_name = dbt.this.__str__().split(".")[-1][1:-1]
+                file_path = os.path.join(os.getcwd(), f"models/{model_name}.py")
+                patrol_code = extract_function_source(
+                    file_path, context["func"].__name__
+                )
+            except:
+                pass
+
         end = datetime.utcnow()
 
         patrol_info = {
