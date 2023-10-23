@@ -29,6 +29,7 @@ models:
       - name: user_id
         description: "The user ID associated with the order."
         tests:
+          - unique
           - not_null
       - name: product_name
         description: "The name of the product ordered."
