@@ -19,7 +19,7 @@ class PatrolContext(TypedDict):
 
 
 @contextmanager
-def patrol_group(group_name: str, dbt=None):
+def patrol_group(group_name: str, dbt_model_uri=None):
     patrols: dict[str:PatrolContext] = dict()
 
     def patrol(
@@ -96,10 +96,9 @@ def patrol_group(group_name: str, dbt=None):
             patrol_code = inspect.getsource(context["func"])
         except:
             pass
-        if dbt:
+        if dbt_model_uri:
             try:
-                model_name = dbt.this.__str__().split(".")[-1][1:-1]
-                file_path = os.path.join(os.getcwd(), f"models/{model_name}.py")
+                file_path = os.path.join(os.getcwd(), f"models/{dbt_model_uri}.py")
                 patrol_code = extract_function_source(
                     file_path, context["func"].__name__
                 )
