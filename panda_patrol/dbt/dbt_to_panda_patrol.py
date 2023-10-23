@@ -12,7 +12,7 @@ def dbt_to_panda_patrol(results_json):
     test_objects = []
 
     for item in data:
-        if item.get("adapter_response", {}).get("code") == "CREATE VIEW":
+        if item["unique_id"].startswith("model."):
             view_name = item["unique_id"].split(".")[-1]
             views_set.add(view_name)
 
