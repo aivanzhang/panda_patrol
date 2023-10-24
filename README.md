@@ -1,7 +1,7 @@
 # <img src="panda-patrol.png" alt="Panda Patrol" width="50"/> Panda Patrol
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.8-blue.svg) 
 
-Add dashboards, alerting, and silencing to your data tests with <ins> **less than 5 lines of code.** </ins>
+Gain greater visibility and context into your data pipelines with dashboards, alerting, silencing and other features built around your existing data tests and data profiling tools — within each node of your data pipeline. Add <ins> **less than 5 lines of code** </ins> and just run your pipelines as you normally would. Panda Patrol will take care of the rest.
 
 **Questions and feedback** 
 
@@ -9,15 +9,28 @@ Email: ivanzhangofficial@gmail.com
 
 Call: https://calendly.com/aivanzhang/chat
 
-**See [Airflow](examples/airflow#add-panda-patrols-to-your-airflow-data-tests)** on how to add panda patrols into your Airflow-based data pipelines.
+## Table of Contents
+- [Integrations](#integrations)
+- [Features](#features)
+- [Getting Started](#getting-started)
 
-**See [Dagster](examples/dagster#add-panda-patrols-to-your-dagster-data-tests)** on how to add panda patrols into your Dagster-based data pipelines.
+## Integrations
+- [x] **Custom python data pipeline** <img src="static/python.svg" alt="python" width="16"/>
+- [x] **Airflow** <img src="static/airflow.png" alt="airflow" width="16"/>
+- [x] **Dagster** <img src="static/dagster.png" alt="dagster" width="16"/>
+- [x] **dbt core (>=1.5)** <img src="static/dbt.png" alt="dbt-core" width="16"/>
+- [ ] **dbt cloud** <img src="static/dbt.png" alt="dbt-cloud" width="16"/>
 
-## Overview
-Wrap your existing data tests to automatically generate dashboards, alerting, and silencing. Currently this library does not deal with the orchestration of these data tests. However this may be added in the future depending on demand.
+For examples of each integration, see [examples](examples).
+
+## Features
 
 
-## Getting Started (Demo)
+## Getting Started
+
+
+
+<!-- ## Getting Started (Demo)
 This is a short tutorial that creates a patrol around a data test and then displays this patrol on a **publicly accessible** dashboard here: https://panda-patrol.vercel.app/dashboard. This tutorial uses [dagster](https://docs.dagster.io/) to run the data tests. However, you can use whatever Python-based data pipeline.
 
 
@@ -112,4 +125,4 @@ dagster dev -f hello-dagster.py
 ### 5) View the results
 Go to https://panda-patrol.vercel.app/dashboard to view the results of your data tests. Note you may see other people's data tests on this dashboard as well. This is because this dashboard is publicly accessible.
 
-:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information and [Quickstart](https://github.com/aivanzhang/panda_patrol/wiki/Quickstart) on how to spin up your own Panda Patrol server and other features like adjustable parameters, alerting, and silencing.
+:tada: Congrats! :tada: You have created your first data test dashboard! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information and [Quickstart](https://github.com/aivanzhang/panda_patrol/wiki/Quickstart) on how to spin up your own Panda Patrol server and other features like adjustable parameters, alerting, and silencing. -->
