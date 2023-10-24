@@ -52,7 +52,8 @@ Using a custom data profiling tool? Or an open-source tool like [ydata-profiling
 The best part? Panda Patrol is fully self-hosted; this repository contains its backend and frontend code in its entirety. You can run it on your own infrastructure and have full control over your data. No need to worry about data privacy and security.
 
 ## Demo
-
+<a href="https://www.loom.com/share/864441c4e8034ea2adaf340ca69d988b?sid=7dc6f10a-b0f6-4a5c-927c-09e14289c6ca" title="Link Title">
+    
 ## Getting Started
 Get started by finding the example that best fits your data pipeline. For example, if you use dagster, see [examples/dagster](examples/dagster) for a guide on how to get started with dagster. All guides should take no longer than **10 minutes** to complete.
 
