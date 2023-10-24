@@ -86,7 +86,7 @@ def patrol_group(group_name: str, dbt_model_uri=None):
             status = Status.SKIPPED
 
         sys.stdout = sys.__stdout__
-        if context["store_logs"] or os.environ.get("PANDA_PATROL_ENV") == "dev":
+        if context["store_logs"]:
             print(patrol_logs.getvalue().strip())
             if exception:
                 print(exception)

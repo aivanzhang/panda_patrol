@@ -1,11 +1,11 @@
 import json
-
 import pandas as pd
 import requests
+from dagster import AssetExecutionContext, asset
+from ydata_profiling import ProfileReport
 from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter
-
-from dagster import AssetExecutionContext, MetadataValue, asset
+from panda_patrol.profilers import save_report
 
 
 @asset
@@ -22,7 +22,6 @@ def hackernews_top_story_ids():
         json.dump(top_story_ids[:10], f)
 
 
-# asset dependencies can be inferred from parameter names
 @asset(deps=[hackernews_top_story_ids])
 def hackernews_top_stories(context: AssetExecutionContext):
     """Get items based on story ids from the HackerNews items endpoint."""
@@ -36,27 +35,24 @@ def hackernews_top_stories(context: AssetExecutionContext):
         ).json()
         results.append(item)
 
-    # for item in results:
-    #     print(item["url"])
-    #     get_item_response = requests.get(item["url"])
-    #     assert get_item_response.status_code == 200
-
-    # TEST: Make sure that the item's URL is a valid URL
-    with patrol_group("Hackernews URLs are Valid") as patrol:
-
+    # Group: Hackernews URLs
+    with patrol_group("Hackernews URLs") as patrol:
+        # Test: URLs work
         @patrol("URLs work")
         def urls_work(patrol_id):
             """URLs for stories should work."""
             for item in results:
                 print(item["url"])
-                get_item_response = requests.get(item["url"])
+                get_item_response = requests.get(item["url"], timeout=5)
                 assert get_item_response.status_code == 200
 
             return len(results)
 
+        # Test: Expected Number of URLs found
         @patrol("Expected Number of URLs found")
         def expected_number_of_urls_found(patrol_id):
             """We should find the expected number of URLs."""
+            # Adjustable Parameter allows you to adjust the value on the frontend
             expected_number_urls = int(
                 adjustable_parameter("expected_urls", patrol_id, 5)
             )
@@ -68,11 +64,6 @@ def hackernews_top_stories(context: AssetExecutionContext):
 
     df = pd.DataFrame(results)
     df.to_csv("hackernews_top_stories.csv")
-
-    # recorded metadata can be customized
-    metadata = {
-        "num_records": len(df),
-        "preview": MetadataValue.md(df[["title", "by", "url"]].to_markdown()),
-    }
-
-    context.add_output_metadata(metadata=metadata)
+    report = ProfileReport(df)
+    # Save the report to dashboard
+    save_report(report.to_html(), "Hackernews URLs", "URL Profiling Report", "html")

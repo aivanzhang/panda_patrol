@@ -3,3 +3,4 @@ dagster
 requests
 pandas
 dagster-webserver
+ydata-profiling

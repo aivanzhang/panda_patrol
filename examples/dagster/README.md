@@ -1,64 +1,8 @@
 # Add Panda Patrols to your Dagster Data Tests
-This example shows how Panda Patrols can be added to data tests inside your Dagster DAGs. It creates a basic Dagster DAG with two assets `hackernews_top_story_ids` and `hackernews_top_stories` (which depends on the previous one). `hackernews_top_stories` pulls details about top stories and has a check to make sure that each story's link actually works. Patrols are already setup for this test. 
-
-## TLDR
-**Without Panda Patrols**
-```python
-def hackernews_top_stories(context: AssetExecutionContext):
-    """Get items based on story ids from the HackerNews items endpoint."""
-    with open("hackernews_top_story_ids.json", "r") as f:
-        hackernews_top_story_ids = json.load(f)
-
-    results = []
-	# Get information about each item including the url
-    for item_id in hackernews_top_story_ids:
-        item = requests.get(
-            f"https://hacker-news.firebaseio.com/v0/item/{item_id}.json"
-        ).json()
-        results.append(item)
-
-        # DATA TEST: Make sure that the item's URL is a valid URL
-        for item in results:
-		print(item["url"])
-		get_item_response = requests.get(item["url"])
-		assert get_item_response.status_code == 200
-    ...
-```
-**With Panda Patrols**
-
-This file is located in `hello-dagster.py`
-```diff
-+ from panda_patrol.patrols import patrol_group
-...
-def hackernews_top_stories(context: AssetExecutionContext):
-    """Get items based on story ids from the HackerNews items endpoint."""
-    with open("hackernews_top_story_ids.json", "r") as f:
-        hackernews_top_story_ids = json.load(f)
-
-    results = []
-	# Get information about each item including the url
-    for item_id in hackernews_top_story_ids:
-        item = requests.get(
-            f"https://hacker-news.firebaseio.com/v0/item/{item_id}.json"
-        ).json()
-        results.append(item)
-
-    # DATA TEST: Make sure that the item's URL is a valid URL
-+   with patrol_group("Hackernews Items are Valid") as patrol:
-+	@patrol("URLs work")
-+	def urls_work(patrol_id):
-		"""URLs for stories should work."""
-		for item in results:
-			print(item["url"])
-			get_item_response = requests.get(item["url"])
-			assert get_item_response.status_code == 200
-		
-		return len(results)
-    ...
-```
+This example shows how Panda Patrols can be added to data tests inside your Dagster DAGs. It creates a basic Dagster DAG with two assets `hackernews_top_story_ids` and `hackernews_top_stories` (which depends on the previous one). See [hello-dagster.py](hello-dagster.py) for the code. `hackernews_top_stories` pulls details about top stories and has data tests with respect to each story's link. Patrols are already setup for these test. Furthermore it profiles these urls and stores it in Panda Patrol.
 
 ## Setup
-1. Install the requirements. This installs the necessary dependencies for Dagster and the Dagster assets as well as the Panda Patrol package.
+1. Install the requirements. This installs the necessary dependencies for dagster, panda patrol, and the ydata profiling library package.
     ```bash
     pip install -r requirements.txt
     ```
@@ -66,8 +10,8 @@ def hackernews_top_stories(context: AssetExecutionContext):
     ```bash
     dagster dev -f hello-dagster.py
     ```
-3. Modify the `.env`. Note that the `SMTP_*` and `PATROL_EMAIL` values are dummy values. You will need to replace them with your own values. 
-4. Start the Panda Patrol server. This is needed to run the patrols.
+3. Modify the `.env`. Note that the `SMTP_*` and `PATROL_EMAIL` values are dummy values. You will need to replace them with your own values if you want email alerts. `SLACK_WEBHOOK` is also a dummy value. You will need to replace it with your own value if you want slack alerts.
+4. Start the Panda Patrol server.
     ```bash
     python -m panda_patrol
     ```
