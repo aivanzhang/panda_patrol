@@ -1,5 +1,7 @@
+from ydata_profiling import ProfileReport
 from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter
+from panda_patrol.profilers import save_report
 
 
 def model(dbt, session):
@@ -27,5 +29,8 @@ def model(dbt, session):
                 final_df["product_price"] <= max_price
             ).all(), f"Found value more than the max of {max_price}"
             return final_df.describe().to_dict()
+
+    report = ProfileReport(final_df)
+    save_report(report.to_html(), "User Orders", "User Orders Profiling Report", "html")
 
     return final_df
