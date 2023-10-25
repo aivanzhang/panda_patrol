@@ -27,3 +27,8 @@ dependencies = [
 
 [options.packages.find]
 where = "panda-patrol"
+
+[tool.setuptools.packages.find]
+where = ["."] 
+include = ["panda_patrol"]
+exclude = [] 
