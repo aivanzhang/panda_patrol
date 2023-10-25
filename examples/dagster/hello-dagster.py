@@ -39,7 +39,7 @@ def hackernews_top_stories(context: AssetExecutionContext):
     with patrol_group("Hackernews URLs") as patrol:
         # Test: URLs work
         @patrol("URLs work")
-        def urls_work(patrol_id):
+        def urls_work():
             """URLs for stories should work."""
             for item in results:
                 print(item["url"])
