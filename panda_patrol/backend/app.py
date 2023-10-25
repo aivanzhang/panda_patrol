@@ -640,6 +640,7 @@ def summary(db: Session = Depends(get_db)):
     }
 
 
+# Get a stored data profile
 @app.get("/profile/{profile_id}")
 def get_profile(profile_id: int, db: Session = Depends(get_db)):
     profile = db.query(PatrolProfile).filter_by(id=profile_id).first()
@@ -649,6 +650,7 @@ def get_profile(profile_id: int, db: Session = Depends(get_db)):
     return profile.__dict__
 
 
+# Store a data profile
 @app.post("/profile")
 def save_profile(request: PatrolProfileCreate, db: Session = Depends(get_db)):
     patrol_group = db.query(PatrolGroup).filter_by(name=request.patrol_group).first()

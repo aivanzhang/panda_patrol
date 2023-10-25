@@ -55,6 +55,6 @@ The best part? Panda Patrol is fully self-hosted; this repository contains its b
 See demo here: https://www.loom.com/share/864441c4e8034ea2adaf340ca69d988b?sid=7dc6f10a-b0f6-4a5c-927c-09e14289c6ca
 
 ## Getting Started
-Get started by finding the example that best fits your data pipeline. For example, if you use dagster, see [examples/dagster](examples/dagster) for a guide on how to get started with dagster. All guides should take no longer than **10 minutes** to complete.
+Get started by finding the example that best fits your data pipeline. For example, if you use dagster, see [examples/dagster](examples/dagster) for a guide on how to get started with dagster. All guides should take no longer than **10 minutes** to complete. See [examples](examples) for all examples.
 
 For documentation on how to use Panda Patrol and more details on each feature, see the [wiki](https://github.com/aivanzhang/panda_patrol/wiki).
