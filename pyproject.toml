@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "panda-patrol"
-version = "0.0.83"
+version = "0.0.84"
 authors = [
   { name="Ivan Zhang", email="ivanzhangofficial@gmail.com" },
 ]
@@ -27,8 +27,3 @@ dependencies = [
 
 [options.packages.find]
 where = "panda-patrol"
-
-[tool.setuptools.packages.find]
-where = ["."] 
-include = ["panda_patrol"]
-exclude = [] 

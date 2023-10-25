@@ -21,12 +21,12 @@ Call: https://calendly.com/aivanzhang/chat
 - [Getting Started](#getting-started)
 
 ## Integrations
-- [x] **Custom python data pipeline** <img src="static/python.svg" alt="python" width="16"/>
-- [x] **Airflow** <img src="static/airflow.png" alt="airflow" width="16"/>
-- [x] **Dagster** <img src="static/dagster.png" alt="dagster" width="16"/>
-- [x] **dbt core (>=1.5)** <img src="static/dbt.png" alt="dbt-core" width="16"/>
-- [ ] **dbt cloud** <img src="static/dbt.png" alt="dbt-cloud" width="16"/>
-- [ ] **Prefect** <img src="static/prefect.png" alt="prefect" width="16"/>
+- [x] **Custom python data pipeline** <img src="python.svg" alt="python" width="16"/>
+- [x] **Airflow** <img src="airflow.png" alt="airflow" width="16"/>
+- [x] **Dagster** <img src="dagster.png" alt="dagster" width="16"/>
+- [x] **dbt core (>=1.5)** <img src="dbt.png" alt="dbt-core" width="16"/>
+- [ ] **dbt cloud** <img src="dbt.png" alt="dbt-cloud" width="16"/>
+- [ ] **Prefect** <img src="prefect.png" alt="prefect" width="16"/>
 
 For examples of each integration, see [examples](examples).
 
