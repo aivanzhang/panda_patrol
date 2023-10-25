@@ -24,8 +24,8 @@ Call: https://calendly.com/aivanzhang/chat
 - [x] **Custom python data pipeline** <img src="python.svg" alt="python" width="16"/>
 - [x] **Airflow** <img src="airflow.png" alt="airflow" width="16"/>
 - [x] **Dagster** <img src="dagster.png" alt="dagster" width="16"/>
-- [x] **dbt core (>=1.5)** <img src="dbt.png" alt="dbt-core" width="16"/>
 - [x] **Prefect** <img src="prefect.png" alt="prefect" width="16"/>
+- [x] **dbt core (>=1.5)** <img src="dbt.png" alt="dbt-core" width="16"/>
 - [ ] **dbt cloud** <img src="dbt.png" alt="dbt-cloud" width="16"/>
 
 For examples of each integration, see [examples](examples).
