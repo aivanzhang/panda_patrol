@@ -1,19 +1,20 @@
-# Add Panda Patrols to your Airflow Data Tests
-This example shows how Panda Patrols can be added to data tests inside your Airflow DAGs. It creates a basic Airflow DAG with a single task `get_values_task` task that has a list of values (that it has gotten from somewhere) and runs a few tests on that list of values. Patrols are already setup for the tests. 
+# Integrate Panda Patrols with Airflow
+This example shows how Panda Patrols integrated with your Airflow DAGs. It creates a basic Airflow DAG with a single task `get_values_task` task that has a list of values (that it has gotten from somewhere) and runs a few tests on that list of values. Patrols are already setup for the tests. 
 
 ## Setup
-1. Run the install script. This configures Airflow and then installs the Airflow and Panda Patrol packages.
+1. Run the install script. This configures Airflow and then installs the Airflow and Panda Patrol packages. Finally it installs the ydata-profiling package.
     ```bash
     chmod +x install.sh
     ./install.sh
+    pip install ydata-profiling
     ```
 2. Run the start script. This starts the Airflow server using the dags found in the current directory.
     ```bash
     chmod +x start.sh
     ./start.sh
     ```
-3. Modify the `.env`. Note that the `SMTP_*` and `PATROL_EMAIL` values are dummy values. You will need to replace them with your own values. 
-4. Start the Panda Patrol server. This is needed to run the patrols.
+3. Modify the `.env`. Note that the `SMTP_*` and `PATROL_EMAIL` values are dummy values. You will need to replace them with your own values if you want email alerts. `SLACK_WEBHOOK` is also a dummy value. You will need to replace it with your own value if you want slack alerts.
+4. Start the Panda Patrol server. 
     ```bash
     python -m panda_patrol
     ```
