@@ -300,6 +300,9 @@ def delete_patrol_group(group_id: int, db: Session = Depends(get_db)):
         # Delete associated runs for the patrol
         db.query(PatrolRun).filter(PatrolRun.patrol_id == patrol.id).delete()
 
+        # Delete associated profiles for the patrol
+        db.query(PatrolProfile).filter(PatrolProfile.patrol_id == patrol.id).delete()
+
         # Delete the patrol itself
         db.query(Patrol).filter(Patrol.id == patrol.id).delete()
 
