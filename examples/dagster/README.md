@@ -1,5 +1,5 @@
-# Add Panda Patrols to your Dagster Data Tests
-This example shows how Panda Patrols can be added to data tests inside your Dagster DAGs. It creates a basic Dagster DAG with two assets `hackernews_top_story_ids` and `hackernews_top_stories` (which depends on the previous one). See [hello-dagster.py](hello-dagster.py) for the code. `hackernews_top_stories` pulls details about top stories and has data tests with respect to each story's link. Patrols are already setup for these test. Furthermore it profiles these urls and stores it in Panda Patrol.
+# Integrate Panda Patrols with Dagster
+This example shows how Panda Patrols can be integrated with your Dagster DAGs. It creates a basic Dagster DAG with two assets `hackernews_top_story_ids` and `hackernews_top_stories` (which depends on the previous one). See [hello-dagster.py](hello-dagster.py) for the code. `hackernews_top_stories` pulls details about top stories and has data tests with respect to each story's link. Patrols are already setup for these test. Furthermore it profiles these urls and stores it in Panda Patrol.
 
 ## Setup
 1. Install the requirements. This installs the necessary dependencies for dagster, panda patrol, and the ydata profiling library package.

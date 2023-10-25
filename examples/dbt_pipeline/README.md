@@ -1,5 +1,5 @@
-# Add Panda Patrols to your DBT Data Tests
-This example shows how Panda Patrols can be added to data tests inside your DBT pipeline. It creates several DBT models ([models](models)) and also a Python DBT model ([user_orders_products_view](models/user_orders_products_view.py)). This Python-based model is needed for our Python-based Panda Patrols. Patrols are set up for this Python model.
+# Integrate Panda Patrols with DBT
+This example shows how Panda Patrols can be integrated with your DBT pipeline. It creates several DBT models ([models](models)) and also a Python DBT model ([user_orders_products_view](models/user_orders_products_view.py)). This Python-based model is needed for our Python-based Panda Patrols. Patrols are set up for this Python model.
 
 ## Setup
 1. Install the requirements. This installs the necessary dependencies for DBT and Panda Patrol. Note that we're using `dbt-postgres` as the adapter. You can use any adapter you want, but you will need to modify the `profiles.yml` accordingly. Furthermore, we're using [dbt-fal](https://github.com/fal-ai/dbt-fal) which provides further Python compatibility with DBT. 
