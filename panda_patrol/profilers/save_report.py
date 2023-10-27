@@ -1,6 +1,7 @@
 import requests
 import os
 from datetime import datetime
+from panda_patrol.headers.get_headers import get_headers
 
 
 def save_report(report_string: str, patrol_group: str, patrol: str, report_format: str):
@@ -24,7 +25,9 @@ def save_report(report_string: str, patrol_group: str, patrol: str, report_forma
 
     patrol_url = os.environ.get("PANDA_PATROL_URL")
     if patrol_url:
-        response = requests.post(f"{patrol_url}/profile", json=payload)
+        response = requests.post(
+            f"{patrol_url}/profile", json=payload, headers=get_headers()
+        )
 
     try:
         response.raise_for_status()

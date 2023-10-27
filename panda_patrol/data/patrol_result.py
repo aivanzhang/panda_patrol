@@ -6,6 +6,7 @@ import traceback
 import requests
 import os
 from enum import Enum
+from panda_patrol.headers.get_headers import get_headers
 
 
 class Severity(Enum):
@@ -106,7 +107,9 @@ class PandaResult:
         }
         patrol_url = os.environ.get("PANDA_PATROL_URL")
         if patrol_url:
-            response = requests.post(f"{patrol_url}/patrol/run", json=payload)
+            response = requests.post(
+                f"{patrol_url}/patrol/run", json=payload, headers=get_headers()
+            )
             try:
                 response.raise_for_status()
             except requests.exceptions.HTTPError as e:

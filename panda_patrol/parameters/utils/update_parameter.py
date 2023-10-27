@@ -1,4 +1,5 @@
 import requests
+from panda_patrol.headers.get_headers import get_headers
 
 
 def update_parameter(url, patrol_id, parameter_id, type, value):
@@ -13,6 +14,7 @@ def update_parameter(url, patrol_id, parameter_id, type, value):
     response = requests.post(
         f"{url}/patrol_parameters",
         json=payload,
+        headers=get_headers(),
     )
 
     try:
