@@ -25,13 +25,13 @@ class Person(Base):
     __tablename__ = "people"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(Text, index=True)
-    email = Column(Text, index=True, unique=True)
+    email = Column(Text, index=True)
 
 
 class PatrolGroup(Base):
     __tablename__ = "patrol_groups"
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(Text, index=True, unique=True)
+    name = Column(Text, index=True)
     patrols = relationship("Patrol", back_populates="group")
 
 
