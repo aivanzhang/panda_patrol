@@ -3,8 +3,8 @@ from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter, static_parameter
 from panda_patrol.profilers import save_report
 
-from ydata_profiling import ProfileReport
-from dataprofiler import Profiler
+# from ydata_profiling import ProfileReport
+# from dataprofiler import Profiler
 import json
 import pandas as pd
 
@@ -28,7 +28,7 @@ def run_tests_on_dataframe(df):
             postive_min = int(adjustable_parameter("is_positive", patrol_id, 0))
             static_postive_min = int(static_parameter("is_positive", patrol_id, 4))
             df["is_positive"] = df["values"].apply(lambda num: num > postive_min)
-            profile = Profiler(df)
+            # profile = Profiler(df)
 
             # Print the report using json to prettify.
             # report = profile.report(report_options={"output_format": "pretty"})
@@ -36,9 +36,9 @@ def run_tests_on_dataframe(df):
             #     json.dumps(report, indent=4), "numeric tests", "is_positive", "json"
             # )
 
-            profile = ProfileReport(df, title="Profiling Report")
-            html_str = profile.to_html()
-            save_report(html_str, "numeric tests", "is_positive", "html")
+            # profile = ProfileReport(df, title="Profiling Report")
+            # html_str = profile.to_html()
+            # save_report(html_str, "numeric tests", "is_positive", "html")
             # json_str = profile.to_json()
             # save_report(json_str, "numeric tests", "is_positive", "json")
 
