@@ -15,7 +15,7 @@ def model(dbt, session):
     # Join the result with products on product_name
     final_df = user_orders_df.merge(products_df, on="product_name", how="inner")
 
-    with patrol_group("User Orders", dbt) as patrol:
+    with patrol_group("User Orders", "user_orders_products_view") as patrol:
 
         @patrol("All prices within expected range")
         def prices_within_range(patrol_id):
