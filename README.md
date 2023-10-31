@@ -33,6 +33,9 @@ For examples of each integration, see [examples](examples).
 ## Features
 This section describes the features of Panda Patrol at a high level. See [demo](#demo) for a short walkthrough of each feature. See [wiki](https://github.com/aivanzhang/panda_patrol/wiki) to learn how to implement each feature and more details.
 
+### Generate Data Tests
+Don't know what data tests to write? No problem. Panda Patrol can generate data tests for you. Just pass in the headers, a preview of the data, and optional additional context.
+
 ### Data Test Results
 Write Python-based data tests right within your pipelines. Panda Patrol will store the results of each data test — the test code, logs, return value, start time, end time, exception (if any), and more — in a database. These results can be tracked in a general dashboard (with high level context like test status) and a dashboard for each pipeline run (with all the context w.r.t. the test).
 
@@ -46,10 +49,10 @@ Be notified when your data tests fail. Configure your own email and Slack settin
 Want to skip and silence a data test? No problem. Silencing a data test is as easy as clicking a button and choosing a time.
 
 ### Data Profiles
-Using a custom data profiling tool? Or an open-source tool like [ydata-profiling](https://github.com/ydataai/ydata-profiling)? Use Panda Patrol to store data profiles (that are in JSON or HTML format). Check these profiles to see what your data looks like at each step of your pipeline.
+Using a custom data profiling tool? Or an open-source tool like [ydata-profiling](https://github.com/ydataai/ydata-profiling)? Store data profiles (that are in JSON or HTML format) and check them to see what your data looks like at each step of your pipeline.
 
 ### Fully Self-Hosted
-The best part? Panda Patrol is fully self-hosted; this repository contains its backend and frontend code in its entirety. You can run it on your own infrastructure and have full control over your data. No need to worry about data privacy and security.
+The best part? Panda Patrol can be fully self-hosted; this repository contains its backend and frontend code. You can run it on your own infrastructure and have full control over your data. No need to worry about data privacy and security.
 
 ## Demo
 See demo here: https://www.loom.com/share/864441c4e8034ea2adaf340ca69d988b?sid=7dc6f10a-b0f6-4a5c-927c-09e14289c6ca
