@@ -12,6 +12,7 @@ Call: https://calendly.com/aivanzhang/chat
 ## Table of Contents
 - [Integrations](#integrations)
 - [Features](#features)
+    - [Generate Data Tests](#generate-data-tests)
     - [Data Test Results](#storing-data-test-results)
     - [Data Test Parameters](#data-test-parameters)
     - [Alerting](#alerting)
@@ -41,6 +42,9 @@ Write Python-based data tests right within your pipelines. Panda Patrol will sto
 
 ### Data Test Parameters
 Data changes all the time. Your data tests should change to accomodate these changes. With Panda Patrol, you can pass in parameters to your data tests and later change these parameters on the frontend — with just one function call.
+
+### Monitor Data Pipeline Steps
+Monitor each step of your pipeline so that you know each step is running as expected. Panda Patrol will store the start time, end time, and status of each step in a database. This gives you a high-level overview of your pipeline and allows you to drill down into each step to see more details.
 
 ### Alerting
 Be notified when your data tests fail. Configure your own email and Slack settings to receive alerts. Alerts provide all the details you see in the dashboards so you get all the context you need to debug pipelines.
