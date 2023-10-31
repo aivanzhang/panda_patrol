@@ -2,6 +2,7 @@ from panda_patrol.data.patrol_result import Severity
 from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter, static_parameter
 from panda_patrol.profilers import save_report
+from panda_patrol.ai import generate_data_tests
 
 # from ydata_profiling import ProfileReport
 # from dataprofiler import Profiler
@@ -17,7 +18,16 @@ class Test:
         assert self.apple == 1
 
 
-def run_tests_on_dataframe(df):
+def run_tests_on_dataframe(df: pd.DataFrame):
+    # lst = [["Geek", 25], ["is", 30], ["for", 26], ["Geeksforgeeks", 22]]
+
+    # df = pd.DataFrame(lst, columns=["Tag", "number"])
+    # generate_data_tests(
+    #     ["Tag", "number"],
+    #     df,
+    #     "This is a dataset about how many times each word was clicked on a website.",
+    #     "data_tests.py",
+    # )
     with patrol_group("numeric tests") as patrol:
         # t = Test()
         # patrol("is_positive", severity=Severity.INFO)(t.run_this)

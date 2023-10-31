@@ -22,6 +22,12 @@ def generate_data_tests(
     secret_key = os.environ.get("PANDA_PATROL_SECRET_KEY")
 
     if patrol_url == DEFAULT_PANDA_PATROL_URL and not secret_key.startswith("public-"):
+        if os.path.isfile(output_file):
+            print(
+                f"The file {output_file} already exists. Please delete the file or change the output file name to regenerate data tests."
+            )
+            return
+
         payload = {
             "columns": ",".join(columns),
             "data_preview": f"{data_preview}",
