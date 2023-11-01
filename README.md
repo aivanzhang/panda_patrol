@@ -15,6 +15,7 @@ Call: https://calendly.com/aivanzhang/chat
     - [Generate Data Tests](#generate-data-tests)
     - [Data Test Results](#storing-data-test-results)
     - [Data Test Parameters](#data-test-parameters)
+    - [Monitor Data Pipeline Steps](#monitor-data-pipeline-steps)
     - [Alerting](#alerting)
     - [Silencing](#silencing)
     - [Data Profiles](#data-profiles)

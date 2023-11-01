@@ -19,6 +19,16 @@ class Test:
 
 
 def run_tests_on_dataframe(df: pd.DataFrame):
+    # generate_data_tests(
+    #     columns=["id", "name", "age"],
+    #     data_preview="""
+    #     1,John,25,
+    #     2,Jane,30,
+    #     3,Joe,35,
+    #     """,
+    #     context="This is a table of young users who have signed up for a special service for people whose names start with J.",
+    #     output_file="generated_user_data_tests.py",
+    # )
     # lst = [["Geek", 25], ["is", 30], ["for", 26], ["Geeksforgeeks", 22]]
 
     # df = pd.DataFrame(lst, columns=["Tag", "number"])
@@ -56,13 +66,13 @@ def run_tests_on_dataframe(df: pd.DataFrame):
             assert df["is_positive"].all()
             return "POSITIVE"
 
-        # @patrol("is_even", severity=Severity.INFO)
-        # def is_even(patrol_id):
-        #     # print(patrol_id)
-        #     df["is_even"] = df["values"].apply(lambda num: num % 2 == 0)
-        #     # print(patrol_id, df)
+    # @patrol("is_even", severity=Severity.INFO)
+    # def is_even(patrol_id):
+    #     # print(patrol_id)
+    #     df["is_even"] = df["values"].apply(lambda num: num % 2 == 0)
+    #     # print(patrol_id, df)
 
-        #     return "EVEN"
+    #     return "EVEN"
 
 
 # Sample dataframe
