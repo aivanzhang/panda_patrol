@@ -13,6 +13,7 @@ Call: https://calendly.com/aivanzhang/chat
 - [Integrations](#integrations)
 - [Features](#features)
     - [Generate Data Tests](#generate-data-tests)
+    - [Anomaly Detection](#anomaly-detection)
     - [Data Test Results](#storing-data-test-results)
     - [Data Test Parameters](#data-test-parameters)
     - [Monitor Data Pipeline Steps](#monitor-data-pipeline-steps)
@@ -37,6 +38,9 @@ This section describes the features of Panda Patrol at a high level. See [demo](
 
 ### Generate Data Tests
 Don't know what data tests to write? No problem. Panda Patrol can generate data tests for you. Just pass in the headers, a preview of the data, and optional additional context.
+
+### Anomaly Detection
+Want to quickly check for anomalies in a column? Panda Patrol can do that for you. Panda Patrol uses the ECOD anomaly detection model from the [pyod](https://github.com/yzhao062/pyod) open source anomaly detection library. Just pass in the excepted distribution of the column and the current distribution of the column. Panda Patrol detect and surface any anomalies. Even better, customize your own anomaly detection model and pass it in to Panda Patrol.
 
 ### Data Test Results
 Write Python-based data tests right within your pipelines. Panda Patrol will store the results of each data test — the test code, logs, return value, start time, end time, exception (if any), and more — in a database. These results can be tracked in a general dashboard (with high level context like test status) and a dashboard for each pipeline run (with all the context w.r.t. the test).
