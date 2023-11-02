@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "panda-patrol"
-version = "0.0.92"
+version = "0.0.94"
 authors = [
   { name="Ivan Zhang", email="ivanzhangofficial@gmail.com" },
 ]
@@ -19,6 +19,7 @@ dependencies = [
   "uvicorn[standard]",
   "python-dotenv",
   "slack_sdk",
+  "pyod",
 ]
 
 [project.urls]
