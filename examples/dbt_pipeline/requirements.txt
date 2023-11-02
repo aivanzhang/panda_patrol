@@ -1,6 +1,6 @@
 dbt-fal==1.5.4
 dbt-postgres==1.5.8
 matplotlib==3.7.3
-panda-patrol==0.0.86
+panda-patrol==0.0.94
 pydantic==1.10.13
 ydata-profiling==4.5.1
