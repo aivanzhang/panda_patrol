@@ -4,7 +4,8 @@ from panda_patrol.parameters import adjustable_parameter, static_parameter
 from panda_patrol.profilers import save_report
 from panda_patrol.ai import generate_data_tests
 
-# from ydata_profiling import ProfileReport
+from ydata_profiling import ProfileReport
+
 # from dataprofiler import Profiler
 import json
 import pandas as pd
@@ -56,9 +57,9 @@ def run_tests_on_dataframe(df: pd.DataFrame):
             #     json.dumps(report, indent=4), "numeric tests", "is_positive", "json"
             # )
 
-            # profile = ProfileReport(df, title="Profiling Report")
-            # html_str = profile.to_html()
-            # save_report(html_str, "numeric tests", "is_positive", "html")
+            profile = ProfileReport(df, title="Profiling Report")
+            html_str = profile.to_html()
+            save_report(html_str, "numeric tests", "is_positive", "html")
             # json_str = profile.to_json()
             # save_report(json_str, "numeric tests", "is_positive", "json")
 
