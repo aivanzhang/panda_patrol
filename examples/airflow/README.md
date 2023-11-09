@@ -13,14 +13,13 @@ This example shows how Panda Patrols integrated with your Airflow DAGs. It creat
     chmod +x start.sh
     ./start.sh
     ```
-3. Modify the `.env`. Note that the `SMTP_*` and `PATROL_EMAIL` values are dummy values. You will need to replace them with your own values if you want email alerts. `SLACK_WEBHOOK` is also a dummy value. You will need to replace it with your own value if you want slack alerts.
-4. Start the Panda Patrol server. 
-    ```bash
-    python -m panda_patrol
+3. Open the Airflow UI at http://localhost:8080/ and login with the default username and password.
+4. Turn on the `get_values_dag` DAG and trigger it. You may need to refresh the page to see the DAG. You should see the patrols running in the logs.
+5. After the DAG finishes, you should see the following message in your logs
+    ```bash 
+    See your Panda Patrol dashboard here: https://panda-patrol.vercel.app/public/public-xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
     ```
-5. Open the Airflow UI at http://localhost:8080/ and login with the default username and password.
-6. Turn on the `get_values_dag` DAG and trigger it. You may need to refresh the page to see the DAG. You should see the patrols running in the logs.
-7. After the DAG finishes, you should see the results of the patrols in the Panda Patrol UI at http://localhost:8000. It should look like
+    Click on the link to see the following dashboard
     ![Panda Patrol UI](result.png)
 
 :tada: Congrats! :tada: You have now added Panda Patrols to Airflow! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.

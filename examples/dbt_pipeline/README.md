@@ -8,12 +8,7 @@ This example shows how Panda Patrols can be integrated with your DBT pipeline. I
     ```
 2. Make sure your `profiles.yml` is set up correctly. An example is provided in this directory [profiles.yml](profiles.yml). Note that in addition to the basic dbt options, we have added options needed for dbt-fal (see more details [here](https://github.com/fal-ai/dbt-fal/tree/main/projects/adapter#2-update-your-profilesyml-and-add-the-fal-adapter)).
 
-3. Modify the `.env`. Note that the `SMTP_*` and `PATROL_EMAIL` values are dummy values. You will need to replace them with your own values if you want email alerts. `SLACK_WEBHOOK` is also a dummy value. You will need to replace it with your own value if you want slack alerts.
-4. Start the Panda Patrol server. 
-    ```bash
-    python -m panda_patrol
-    ```
-5. Start monitoring the DBT test results. This stores all your dbt test results in Panda Patrol.
+3. Start monitoring the DBT test results. This stores all your dbt test results in Panda Patrol.
     ```bash
     python -m panda_patrol.dbt
     ```
@@ -21,7 +16,11 @@ This example shows how Panda Patrols can be integrated with your DBT pipeline. I
     ```bash
     dbt build --write-json
     ```
-6. After the assets finish, you should see the results of the patrols in the Panda Patrol UI at http://localhost:8000. It should look like
+6. After the asset finishes, you should see the following message in your logs
+    ```bash 
+    See your Panda Patrol dashboard here: https://panda-patrol.vercel.app/public/public-xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    ```
+    Click on the link to see the following dashboard
     ![Panda Patrol UI](result.gif)
 
 :tada: Congrats! :tada: You have now added Panda Patrols to DBT! See the [documentation](https://github.com/aivanzhang/panda_patrol/wiki) for more information on other features like adjustable parameters, alerting, and silencing.
