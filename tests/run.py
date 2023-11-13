@@ -9,6 +9,7 @@ from ydata_profiling import ProfileReport
 # from dataprofiler import Profiler
 import json
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class Test:
@@ -62,7 +63,10 @@ def run_tests_on_dataframe(df: pd.DataFrame):
             save_report(html_str, "numeric tests", "is_positive", "html")
             # json_str = profile.to_json()
             # save_report(json_str, "numeric tests", "is_positive", "json")
-
+            df.plot()
+            plt.savefig("plot.png")
+            with open("plot.png", "rb") as f:
+                save_report(f.read(), "numeric tests", "is_positive", "image")
             # print(patrol_id, df)
             assert df["is_positive"].all()
             return "POSITIVE"

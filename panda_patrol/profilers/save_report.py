@@ -13,7 +13,7 @@ def save_report(report_string: str, patrol_group: str, patrol: str, report_forma
         report_string (str): The report string.
         patrol_group (str): Name of the patrol group.
         patrol (str): Name of the patrol.
-        report_format (str): Format of the report. Supports 'html' or 'json'.
+        report_format (str): Format of the report. Supports 'html', 'json', and 'image'.
     """
 
     payload = {
