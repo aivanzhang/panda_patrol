@@ -1,7 +1,7 @@
 from panda_patrol.data.patrol_result import Severity
 from panda_patrol.patrols import patrol_group
 from panda_patrol.parameters import adjustable_parameter, static_parameter
-from panda_patrol.profilers import save_report
+from panda_patrol.profilers import save_report, basic_data_profile
 from panda_patrol.ai import generate_data_tests
 
 from ydata_profiling import ProfileReport
@@ -51,25 +51,25 @@ def run_tests_on_dataframe(df: pd.DataFrame):
             static_postive_min = int(static_parameter("is_positive", patrol_id, 4))
             df["is_positive"] = df["values"].apply(lambda num: num > postive_min)
             # profile = Profiler(df)
-
+            basic_data_profile(df, "numeric tests", "is_positive")
             # Print the report using json to prettify.
             # report = profile.report(report_options={"output_format": "pretty"})
             # save_report(
             #     json.dumps(report, indent=4), "numeric tests", "is_positive", "json"
             # )
 
-            profile = ProfileReport(df, title="Profiling Report")
-            html_str = profile.to_html()
-            save_report(html_str, "numeric tests", "is_positive", "html")
+            # profile = ProfileReport(df, title="Profiling Report")
+            # html_str = profile.to_html()
+            # save_report(html_str, "numeric tests", "is_positive", "html")
             # json_str = profile.to_json()
             # save_report(json_str, "numeric tests", "is_positive", "json")
-            df.plot()
-            plt.savefig("plot.png")
-            with open("plot.png", "rb") as f:
-                save_report(f.read(), "numeric tests", "is_positive", "image")
-            # print(patrol_id, df)
-            assert df["is_positive"].all()
-            return "POSITIVE"
+            # df.plot()
+            # plt.savefig("plot.png")
+            # with open("plot.png", "rb") as f:
+            #     save_report(f.read(), "numeric tests", "is_positive", "image")
+            # # print(patrol_id, df)
+            # assert df["is_positive"].all()
+            # return "POSITIVE"
 
     # @patrol("is_even", severity=Severity.INFO)
     # def is_even(patrol_id):

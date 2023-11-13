@@ -1,0 +1,1 @@
+pip install "fastapi[all]" sqlalchemy requests "uvicorn[standard]" python-dotenv slack_sdk pyod ydata-profiling
