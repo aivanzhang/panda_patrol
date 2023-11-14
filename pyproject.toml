@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "panda-patrol"
-version = "0.0.96"
+version = "0.0.97"
 authors = [
   { name="Ivan Zhang", email="ivanzhangofficial@gmail.com" },
 ]
@@ -21,6 +21,7 @@ dependencies = [
   "slack_sdk",
   "pyod",
   "ydata-profiling",
+  "pandas"
 ]
 
 [project.urls]
