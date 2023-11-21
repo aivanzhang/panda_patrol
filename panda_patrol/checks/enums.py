@@ -3,6 +3,8 @@ from panda_patrol.parameters import adjustable_parameter
 
 
 def should_run(df: pd.DataFrame):
+    if df.dtype == "object":
+        return False
     return (df.nunique() / df.count()) < 0.3
 
 
