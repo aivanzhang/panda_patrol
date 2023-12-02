@@ -12,7 +12,8 @@ Call: https://calendly.com/aivanzhang/chat
 ## Table of Contents
 - [Integrations](#integrations)
 - [Features](#features)
-    - [Generate Data Tests](#generate-data-tests)
+    - [AI-Generated Data Tests](#ai-generated-data-tests)
+    - [General Data Tests](#general-data-tests)
     - [Anomaly Detection](#anomaly-detection)
     - [Data Test Results](#storing-data-test-results)
     - [Data Test Parameters](#data-test-parameters)
@@ -36,8 +37,11 @@ For examples of each integration, see [examples](examples).
 ## Features
 This section describes the features of Panda Patrol at a high level. See [demo](#demo) for a short walkthrough of each feature. See [wiki](https://github.com/aivanzhang/panda_patrol/wiki) to learn how to implement each feature and more details.
 
-### Generate Data Tests
+### AI-Generated Data Tests
 Don't know what data tests to write? No problem. Panda Patrol can generate data tests for you. Just pass in the headers, a preview of the data, and optional additional context.
+
+### General Data Tests
+Want to get started with a few quick, easy, general, and important data tests? Panda Patrol comes pre-built with a few data tests that run on your data. The best part? It only takes one function call to run these tests.
 
 ### Anomaly Detection
 Want to quickly check for anomalies in a column? Panda Patrol can do that for you. Panda Patrol uses the ECOD anomaly detection model from the [pyod](https://github.com/yzhao062/pyod) open source anomaly detection library. Just pass in the excepted distribution of the column and the current distribution of the column. Panda Patrol detect and surface any anomalies. Even better, customize your own anomaly detection model and pass it in to Panda Patrol.
