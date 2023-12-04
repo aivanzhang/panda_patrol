@@ -68,7 +68,7 @@ Using a custom data profiling tool? Or an open-source tool like [ydata-profiling
 The best part? Panda Patrol can be fully self-hosted; this repository contains its backend and frontend code. You can run it on your own infrastructure and have full control over your data. No need to worry about data privacy and security.
 
 ## Demo
-See demo here: https://www.loom.com/share/864441c4e8034ea2adaf340ca69d988b?sid=7dc6f10a-b0f6-4a5c-927c-09e14289c6ca
+See demo here: https://www.loom.com/share/0468aef48b1843f381146399f1652b81?sid=107df0c0-3e53-4d3c-b9f2-1159d3f23bdf
 
 ## Getting Started
 Check out the [Quickstart](https://github.com/aivanzhang/panda_patrol/wiki/Quickstart) guide to get started.
