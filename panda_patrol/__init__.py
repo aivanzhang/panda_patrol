@@ -12,9 +12,9 @@ if found_dotenv:
     with open(found_dotenv, "a") as f:
         if not os.environ.get("PANDA_PATROL_URL"):
             f.write(f'\nPANDA_PATROL_URL="{DEFAULT_PANDA_PATROL_URL}"')
-        if (
-            not os.environ.get("PANDA_PATROL_SECRET_KEY")
-            and os.environ.get("PANDA_PATROL_URL") == DEFAULT_PANDA_PATROL_URL
+        if not os.environ.get("PANDA_PATROL_SECRET_KEY") and (
+            not os.environ.get("PANDA_PATROL_URL")
+            or os.environ.get("PANDA_PATROL_URL") == DEFAULT_PANDA_PATROL_URL
         ):
             f.write(f'\nPANDA_PATROL_SECRET_KEY="public-{uuid.uuid4()}"')
 else:
