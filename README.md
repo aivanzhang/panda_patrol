@@ -64,7 +64,7 @@ Want to skip and silence a data test? No problem. Silencing a data test is as ea
 ### Data Profiles
 Using a custom data profiling tool? Or an open-source tool like [ydata-profiling](https://github.com/ydataai/ydata-profiling)? Store data profiles (that are in JSON or HTML format) and check them to see what your data looks like at each step of your pipeline.
 
-### Fully Self-Hosted
+### [Fully Self-Hosted](https://github.com/aivanzhang/panda_patrol/wiki/Backend)
 The best part? Panda Patrol can be fully self-hosted; this repository contains its backend and frontend code. You can run it on your own infrastructure and have full control over your data. No need to worry about data privacy and security.
 
 ## Demo
