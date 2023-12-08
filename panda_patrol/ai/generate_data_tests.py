@@ -9,7 +9,7 @@ def generate_data_tests(
 ):
     """
     Generate data tests given the column titles, a preview of the data and the additional and optional context around these data tests.
-    Note this only works if you have an account at https://panda-patrol.vercel.app/.
+    Note this only works if you have an account at https://www.pandapatrol.io/.
 
     :param columns: The columns titles of the data
     :param data_preview: The preview of the data
@@ -47,5 +47,5 @@ def generate_data_tests(
             f.write(generated_tests_str)
     else:
         print(
-            "You are not using the default panda patrol url or you are using a public key. You will not be able to generate data tests. Create an account at https://panda-patrol.vercel.app/ to generate data tests."
+            "You are not using the default panda patrol url or you are using a public key. You will not be able to generate data tests. Create an account at https://www.pandapatrol.io/ to generate data tests."
         )

@@ -27,7 +27,6 @@ def print_see_dashboard():
     secret_key = os.environ.get("PANDA_PATROL_SECRET_KEY")
 
     if patrol_url == DEFAULT_PANDA_PATROL_URL and secret_key.startswith("public-"):
-        frontend_url = "https://panda-patrol.vercel.app"
         print(
-            f"\033[95m\033[92mSee your Panda Patrol dashboard here: \033[1m\033[4m{frontend_url}/public/{secret_key}\033[0m"
+            f"\033[95m\033[92mSee your Panda Patrol dashboard here: \033[1m\033[4m{patrol_url}/public/{secret_key}\033[0m"
         )
