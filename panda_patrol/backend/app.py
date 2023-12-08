@@ -681,6 +681,82 @@ def save_profile(request: PatrolProfileCreate, db: Session = Depends(get_db)):
     return {"success": True}
 
 
+# Generate a data quality report
+@app.get("/get_data_quality_report")
+def get_data_quality_report(
+    db: Session = Depends(get_db),
+):
+    report_payload = {}
+
+    patrol_groups = db.query(PatrolGroup).all()
+
+    for patrol_group in patrol_groups:
+        patrol_group_name = patrol_group.name
+        patrol_group_payload = {}
+        patrols = db.query(Patrol).filter_by(group_id=patrol_group.id).all()
+        for patrol in patrols:
+            patrol_name = patrol.name
+            patrol_payload = {}
+
+            patrol_run = (
+                db.query(PatrolRun)
+                .filter_by(patrol_id=patrol.id)
+                .order_by(PatrolRun.id.desc())
+                .first()
+            )
+            if patrol_run:
+                patrol_run_payload = {
+                    "status": patrol_run.status,
+                    "severity": patrol_run.severity,
+                    "return_value": patrol_run.return_value,
+                    "start_time": patrol_run.start_time,
+                    "end_time": patrol_run.end_time,
+                    "exception": patrol_run.exception,
+                }
+                patrol_payload["latest_run"] = patrol_run_payload
+
+            patrol_setting = (
+                db.query(PatrolSetting).filter_by(patrol_id=patrol.id).first()
+            )
+            if patrol_setting:
+                patrol_payload["patrol_settings"] = {
+                    "assigned_to_person": patrol_setting.assigned_to_person,
+                    "alerting": patrol_setting.alerting,
+                    "silenced_until": patrol_setting.silenced_until,
+                }
+                patrol_payload["patrol_settings"]["parameters"] = {}
+                patrol_parameters = (
+                    db.query(PatrolParameter)
+                    .filter_by(setting_id=patrol_setting.id)
+                    .all()
+                )
+                for patrol_parameter in patrol_parameters:
+                    patrol_parameter_payload = {
+                        "value": patrol_parameter.value,
+                        "is_active": patrol_parameter.is_active,
+                        "type": patrol_parameter.type,
+                    }
+                    patrol_payload["patrol_settings"]["parameters"][
+                        patrol_parameter.parameter_id
+                    ] = patrol_parameter_payload
+
+            # Get latest profile id
+            patrol_profile = (
+                db.query(PatrolProfile)
+                .filter_by(patrol_id=patrol.id)
+                .order_by(PatrolProfile.time.desc())
+                .first()
+            )
+
+            if patrol_profile:
+                patrol_payload["latest_profile"] = patrol_profile.id
+
+            patrol_group_payload[patrol_name] = patrol_payload
+        report_payload[patrol_group_name] = patrol_group_payload
+
+    return report_payload
+
+
 @app.get("/config.json")
 def config():
     return JSONResponse(json.load(open(os.path.join(static_dir_path, "./config.json"))))
