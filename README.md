@@ -1,5 +1,5 @@
 # <img src="panda-patrol.png" alt="Panda Patrol" width="50"/> Panda Patrol
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.8-blue.svg) 
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.8-blue.svg) [![Downloads](https://static.pepy.tech/badge/panda_patrol)](https://pepy.tech/project/panda_patrol)
 
 Gain greater visibility and context into your data pipelines with dashboards, alerting, silencing and other features built around your existing data tests and data profiling tools — within each step of your data pipelines. Add <ins> **less than 5 lines of code** </ins> and just run your pipelines as you normally would. Panda Patrol will take care of the rest.
 
