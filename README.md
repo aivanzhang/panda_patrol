@@ -7,8 +7,6 @@ Gain greater visibility and context into your data pipelines with dashboards, al
 
 Email: ivanzhangofficial@gmail.com
 
-Call: https://calendly.com/aivanzhang/chat
-
 ## Table of Contents
 - [Integrations](#integrations)
 - [Features](#features)
